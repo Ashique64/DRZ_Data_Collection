@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS.JS";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,18 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("isLoggedIn");
+    if (loggedIn === "true") {
+      navigate("/home", { replace: true });
+    }
+  }, [navigate]);
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem("isLoggedIn");
+  //   navigate("/login", { replace: true });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +44,9 @@ const Login = () => {
       );
 
       if (response.status === 200) {
+        localStorage.setItem("isLoggedIn", "true");
         setTimeout(() => {
-          navigate("/home");
+          navigate("/home", { replace: true });
         }, 2000);
       } else {
         setError("Something went wrong. Please try again.");
