@@ -62,6 +62,7 @@
         padding-bottom: 20px;
 
         button {
+          height: 45px;
           background: var(--secondary-color);
           border: 1.5px solid var(--secondary-color);
           margin-top: 10px;
@@ -81,8 +82,39 @@
             background: transparent;
             color: var(--secondary-color);
           }
+
+          .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            .spinner {
+              width: 20px;
+              height: 20px;
+              border: 3px solid var(--primary-dark);
+              border-top: 3px solid var(--accent-color);
+              border-radius: 50%;
+              animation: spin 0.8s linear infinite;
+            }
+          }
         }
       }
     }
   }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
