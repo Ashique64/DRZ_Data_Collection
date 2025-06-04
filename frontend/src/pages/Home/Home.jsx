@@ -4,6 +4,8 @@ import NavBar from "../../components/NavBar/NavBar";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS";
 import { useNavigate } from "react-router-dom";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const Home = () => {
   const [clientEmail, setClientEmail] = useState("");
@@ -95,11 +97,15 @@ const Home = () => {
     }
   }, [message]);
 
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  });
+
   return (
     <>
       <NavBar />
       <div className="home">
-        <div className="container">
+        <div className="container" data-aos="fade-up">
           <div className="row title-row">
             <div className="col-md-12 title-col">
               <h2>Send mail to your client</h2>
