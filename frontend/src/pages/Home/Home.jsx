@@ -1,28 +1,99 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.scss";
 import NavBar from "../../components/NavBar/NavBar";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [clientEmail, setClientEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [messageType, setMessageType] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSendEmail = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      setMessage("No authentication token found. Please login again.");
+      setMessageType("error");
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 2000);
+      return;
+    }
+
+    if (!clientEmail || !clientEmail.includes("@")) {
+      setMessage("Please enter a valid email address.");
+      setMessageType("error");
+      return;
+    }
+
+    setMessage("");
+    setLoading(true);
+
     try {
       const response = await axios.post(
         `${BaseURL}/api/email/send-invitation/`,
+        { email: clientEmail },
         {
-          email: clientEmail,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       setMessage(response.data.message);
+      setMessageType("success");
+      setClientEmail("");
     } catch (error) {
-      setMessage("Error sending email.");
-      console.error(error);
+      console.error("Email send error:", error);
+
+      if (error.response?.status === 403) {
+        setMessage("Authentication failed. Please login again.");
+        setMessageType("error");
+
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("username");
+
+        setTimeout(() => {
+          navigate("/", { replace: true });
+        }, 2000);
+      } else if (error.response?.status === 401) {
+        setMessage("Session expired. Please login again.");
+        setMessageType("error");
+        setTimeout(() => {
+          navigate("/", { replace: true });
+        }, 2000);
+      } else if (error.response?.status === 400) {
+        setMessage(error.response.data.error || "Invalid request.");
+        setMessageType("error");
+      } else if (error.response?.status >= 500) {
+        setMessage("Server error. Please try again later.");
+        setMessageType("error");
+      } else {
+        setMessage("Error sending email. Please try again.");
+        setMessageType("error");
+      }
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+        setMessageType("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   return (
     <>
@@ -50,11 +121,25 @@ const Home = () => {
                 </div>
                 <div className="col-md-6 col-lg-2 col_2">
                   <button className="btn" onClick={handleSendEmail}>
-                    Send
+                    {loading ? (
+                      <div className="spinner-container">
+                        <span className="spinner"></span>
+                      </div>
+                    ) : (
+                      "Send"
+                    )}
                   </button>
                 </div>
               </div>
-              {message && <p className="text-info mt-3">{message}</p>}
+              {message && (
+                <p
+                  className={`mt-3 ${
+                    messageType === "success" ? "text-success" : "text-danger"
+                  }`}
+                >
+                  {message}
+                </p>
+              )}
             </div>
           </div>
         </div>
