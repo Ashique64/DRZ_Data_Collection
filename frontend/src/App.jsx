@@ -2,13 +2,21 @@ import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login.Jsx";
 import Home from "./pages/Home/Home";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Login />} />
-        <Route exact path="/home" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

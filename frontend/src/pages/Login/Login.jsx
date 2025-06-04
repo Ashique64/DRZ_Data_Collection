@@ -19,11 +19,6 @@ const Login = () => {
     }
   }, [navigate]);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("isLoggedIn");
-  //   navigate("/login", { replace: true });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
