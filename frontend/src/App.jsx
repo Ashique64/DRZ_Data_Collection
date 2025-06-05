@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login.Jsx";
 import Home from "./pages/Home/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Form from "./pages/Form/Form";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/form" element={<Form />} />
       </Routes>
     </Router>
   );
