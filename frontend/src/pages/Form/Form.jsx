@@ -1,23 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Form.scss";
-import { LuFolder, LuSquareCheck, LuUser } from "react-icons/lu";
+import {
+  LuFolder,
+  LuContact,
+  LuImage,
+  LuGlobe,
+  LuClipboardList,
+} from "react-icons/lu";
+import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
 
 const Form = () => {
   const [activeTab, setActiveTab] = useState("property-details");
   const tabsHeaderRef = useRef(null);
 
   useEffect(() => {
-  if (tabsHeaderRef.current) {
-    const activeButton = tabsHeaderRef.current.querySelector(".tab-button.active");
-    if (activeButton) {
-      activeButton.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
+    if (tabsHeaderRef.current) {
+      const activeButton =
+        tabsHeaderRef.current.querySelector(".tab-button.active");
+      if (activeButton) {
+        activeButton.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
     }
-  }
-}, [activeTab]);
+  }, [activeTab]);
 
   return (
     <div id="form">
@@ -26,7 +34,7 @@ const Form = () => {
           <div className="col-md-12 form-col">
             <div className="outline-tabs">
               <div className="tabs-header" ref={tabsHeaderRef}>
-                <button
+                {/* <button
                   className={`tab-button ${
                     activeTab === "guidelines" ? "active" : ""
                   }`}
@@ -34,7 +42,7 @@ const Form = () => {
                 >
                   <LuUser className="tab-icon" />
                   Guidelines
-                </button>
+                </button> */}
                 <button
                   className={`tab-button ${
                     activeTab === "property-details" ? "active" : ""
@@ -50,7 +58,7 @@ const Form = () => {
                   }`}
                   onClick={() => setActiveTab("contact-details")}
                 >
-                  <LuSquareCheck className="tab-icon" />
+                  <LuContact className="tab-icon" />
                   Contact Details
                 </button>
                 <button
@@ -59,7 +67,7 @@ const Form = () => {
                   }`}
                   onClick={() => setActiveTab("gallery")}
                 >
-                  <LuSquareCheck className="tab-icon" />
+                  <LuImage className="tab-icon" />
                   Gallery
                 </button>
                 <button
@@ -68,7 +76,7 @@ const Form = () => {
                   }`}
                   onClick={() => setActiveTab("website-details")}
                 >
-                  <LuSquareCheck className="tab-icon" />
+                  <LuGlobe className="tab-icon" />
                   Website Details
                 </button>
                 <button
@@ -77,9 +85,43 @@ const Form = () => {
                   }`}
                   onClick={() => setActiveTab("overview")}
                 >
-                  <LuSquareCheck className="tab-icon" />
+                  <LuClipboardList className="tab-icon" />
                   Overview
                 </button>
+              </div>
+              <div className="tabs-content">
+                {/* {activeTab === "guidelines" && (
+                  <div className="tab-panel">
+                    <div className="row guideline-row">
+                      <div className="title-section">
+                        <h3>Read the Guidelines</h3>
+                      </div>
+
+                      <div className="col-md-12 guideline-col"></div>
+                    </div>
+                  </div>
+                )} */}
+                {activeTab === "property-details" && <PropertyDetails />}
+                {activeTab === "contact-details" && (
+                  <div className="tab-panel">
+                    Manage your tasks for freelancers
+                  </div>
+                )}
+                {activeTab === "gallery" && (
+                  <div className="tab-panel">
+                    Manage your tasks for freelancers
+                  </div>
+                )}
+                {activeTab === "website-details" && (
+                  <div className="tab-panel">
+                    Manage your tasks for freelancers
+                  </div>
+                )}
+                {activeTab === "overview" && (
+                  <div className="tab-panel">
+                    Manage your tasks for freelancers
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -90,43 +132,3 @@ const Form = () => {
 };
 
 export default Form;
-
-{
-  /* <div className="outline-tabs">
-      <div className="tabs-header">
-        <button
-          className={`tab-button ${activeTab === 'members' ? 'active' : ''}`}
-          onClick={() => setActiveTab('members')}
-        >
-          <LuUser className="tab-icon" />
-          Members
-        </button>
-        <button
-          className={`tab-button ${activeTab === 'projects' ? 'active' : ''}`}
-          onClick={() => setActiveTab('projects')}
-        >
-          <LuFolder className="tab-icon" />
-          Projects
-        </button>
-        <button
-          className={`tab-button ${activeTab === 'tasks' ? 'active' : ''}`}
-          onClick={() => setActiveTab('tasks')}
-        >
-          <LuSquareCheck className="tab-icon" />
-          Settings
-        </button>
-      </div>
-      
-      <div className="tabs-content">
-        {activeTab === 'members' && (
-          <div className="tab-panel">Manage your team members</div>
-        )}
-        {activeTab === 'projects' && (
-          <div className="tab-panel">Manage your projects</div>
-        )}
-        {activeTab === 'tasks' && (
-          <div className="tab-panel">Manage your tasks for freelancers</div>
-        )}
-      </div>
-    </div> */
-}
