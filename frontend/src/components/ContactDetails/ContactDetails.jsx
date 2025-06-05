@@ -12,24 +12,27 @@ import {
   LuMailOpen,
   LuPhoneCall,
   LuPhone,
+  LuUser,
+  LuBadgeInfo,
 } from "react-icons/lu";
 
-const PropertyDetails = () => {
+const ContactDetails = () => {
   return (
     <div className="tab-panel">
       <div className="row details-row">
         <div className="title-section">
-          <h3>Property Information / Business Information</h3>
+          <h3>Contact Details</h3>
         </div>
 
         <div className="form-section">
           <div className="row first_row">
+            <h4 className="mb-5">Operational / Support related matters</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="">Property / Business Name</label>
+                <label htmlFor="">Contact Person Name</label>
                 <div className="input_items">
                   <span>
-                    <LuBuilding2 />
+                    <LuUser />
                   </span>
                   <input type="text" />
                 </div>
@@ -37,35 +40,10 @@ const PropertyDetails = () => {
             </div>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="">Property Address</label>
+                <label htmlFor="">Designation</label>
                 <div className="input_items">
                   <span>
-                    <LuMapPin />
-                  </span>
-                  <input type="text" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row first_row">
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="">Property City</label>
-                <div className="input_items">
-                  <span>
-                    <LuLandPlot />
-                  </span>
-                  <input type="text" />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="">Property State / Province</label>
-                <div className="input_items">
-                  <span>
-                    <LuLandmark />
+                    <LuBadgeInfo />
                   </span>
                   <input type="text" />
                 </div>
@@ -74,9 +52,9 @@ const PropertyDetails = () => {
           </div>
 
           <div className="row first_row">
-            <div className="col-md-6 col-lg-3 item">
+            <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="">Zip/Pin/Postal Code</label>
+                <label htmlFor="">Email Address</label>
                 <div className="input_items">
                   <span>
                     <LuMail />
@@ -85,56 +63,9 @@ const PropertyDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="">Property Country</label>
-                <div className="input_items">
-                  <span>
-                    <LuGlobe />
-                  </span>
-                  <input type="text" />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="">Bill To Company / Organization</label>
-                <div className="input_items">
-                  <span>
-                    <LuBriefcase />
-                  </span>
-                  <input type="text" />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="">GST Number</label>
-                <div className="input_items">
-                  <span>
-                    <LuFileText />
-                  </span>
-                  <input type="text" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row first_row">
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="">Property Phone Number</label>
-                <div className="input_items">
-                  <span>
-                    <LuPhone />
-                  </span>
-                  <input type="text" />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="">Reservation Phone Number</label>
+                <label htmlFor="">Mobile Number</label>
                 <div className="input_items">
                   <span>
                     <LuPhoneCall />
@@ -146,12 +77,13 @@ const PropertyDetails = () => {
           </div>
 
           <div className="row first_row">
+            <h4 className="my-5">Property Owner / Manager</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="">Property Email</label>
+                <label htmlFor="">Contact Person Name</label>
                 <div className="input_items">
                   <span>
-                    <LuMailOpen />
+                    <LuUser />
                   </span>
                   <input type="text" />
                 </div>
@@ -159,16 +91,93 @@ const PropertyDetails = () => {
             </div>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="">Property Website URL</label>
+                <label htmlFor="">Designation</label>
                 <div className="input_items">
                   <span>
-                    <LuGlobeLock />
+                    <LuBadgeInfo />
                   </span>
                   <input type="text" />
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Email Address</label>
+                <div className="input_items">
+                  <span>
+                    <LuMail />
+                  </span>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Mobile Number</label>
+                <div className="input_items">
+                  <span>
+                    <LuPhoneCall />
+                  </span>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row first_row">
+            <h4 className="my-5">Billing / Invoice related matters</h4>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Contact Person Name</label>
+                <div className="input_items">
+                  <span>
+                    <LuUser />
+                  </span>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Designation</label>
+                <div className="input_items">
+                  <span>
+                    <LuBadgeInfo />
+                  </span>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Email Address</label>
+                <div className="input_items">
+                  <span>
+                    <LuMail />
+                  </span>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Mobile Number</label>
+                <div className="input_items">
+                  <span>
+                    <LuPhoneCall />
+                  </span>
+                  <input type="text" />
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="save-btn">
             <button className="btn">save</button>
           </div>
@@ -178,4 +187,4 @@ const PropertyDetails = () => {
   );
 };
 
-export default PropertyDetails;
+export default ContactDetails;

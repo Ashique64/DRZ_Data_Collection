@@ -8,6 +8,7 @@ import {
   LuClipboardList,
 } from "react-icons/lu";
 import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
+import ContactDetails from "../../components/ContactDetails/ContactDetails";
 
 const Form = () => {
   const [activeTab, setActiveTab] = useState("property-details");
@@ -102,11 +103,7 @@ const Form = () => {
                   </div>
                 )} */}
                 {activeTab === "property-details" && <PropertyDetails />}
-                {activeTab === "contact-details" && (
-                  <div className="tab-panel">
-                    Manage your tasks for freelancers
-                  </div>
-                )}
+                {activeTab === "contact-details" && <ContactDetails />}
                 {activeTab === "gallery" && (
                   <div className="tab-panel">
                     Manage your tasks for freelancers
