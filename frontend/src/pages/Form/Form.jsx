@@ -11,6 +11,7 @@ import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
 import ContactDetails from "../../components/ContactDetails/ContactDetails";
 import GalleryDetails from "../../components/GalleryDetails/GalleryDetails";
 import WebsiteDetails from "../../components/WebsiteDetails/WebsiteDetails";
+import Overview from "../../components/Overview/Overview";
 
 const Form = () => {
   const [activeTab, setActiveTab] = useState("property-details");
@@ -108,11 +109,7 @@ const Form = () => {
                 {activeTab === "contact-details" && <ContactDetails />}
                 {activeTab === "gallery" && <GalleryDetails />}
                 {activeTab === "website-details" && <WebsiteDetails />}
-                {activeTab === "overview" && (
-                  <div className="tab-panel">
-                    Overview
-                  </div>
-                )}
+                {activeTab === "overview" && <Overview />}
               </div>
             </div>
           </div>

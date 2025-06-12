@@ -1,17 +1,7 @@
 import React from "react";
 import {
-  LuGlobe,
-  LuMapPin,
-  LuBuilding2,
-  LuLandPlot,
-  LuLandmark,
   LuMail,
-  LuBriefcase,
-  LuFileText,
-  LuGlobeLock,
-  LuMailOpen,
   LuPhoneCall,
-  LuPhone,
   LuUser,
   LuBadgeInfo,
 } from "react-icons/lu";

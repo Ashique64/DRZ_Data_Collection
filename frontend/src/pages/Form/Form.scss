@@ -108,6 +108,23 @@
                   padding: 60px 20px;
                   border-radius: 0 0 10px 10px;
 
+                  .terms {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+
+                    p {
+                      margin: 0;
+
+                      .terms-link {
+                        color: #1c67b8;
+                        text-decoration: none;
+                        cursor: pointer;
+                      }
+                    }
+                  }
+
                   .first_row {
                     margin: 15px 0px;
                     overflow: hidden;
@@ -121,6 +138,22 @@
 
                     .item {
                       margin: 10px 0px;
+
+                      .items_listing_row {
+                        .items_listing_col {
+                          h6 {
+                            color: var(--para-color);
+                          }
+                          ul {
+                            padding: 0;
+                            overflow: hidden;
+                            li {
+                              list-style: none;
+                              color: var(--accent-color);
+                            }
+                          }
+                        }
+                      }
 
                       .upload_wrapper {
                         display: flex;
