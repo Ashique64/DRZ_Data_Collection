@@ -150,6 +150,57 @@
                         }
                       }
 
+                      .choose_file_wrapper {
+                        display: flex;
+                        flex-direction: column;
+                        overflow: hidden;
+
+                        label {
+                          overflow: hidden;
+                          text-wrap: nowrap;
+                        }
+
+                        .choose_file_items {
+                          display: flex;
+                          flex-direction: column;
+
+                          span {
+                            color: var(--accent-color);
+                            font-size: 20px;
+                            padding: 10px 0px;
+                          }
+
+                          input {
+                            border: none;
+                            outline: none;
+                            // border-bottom: 1px solid var(--accent-color);
+                            background: transparent;
+                            width: 100%;
+                            color: var(--accent-color);
+                            padding: 10px;
+                            padding-left: 0px;
+
+                            &:-webkit-autofill {
+                              -webkit-text-fill-color: var(
+                                --form-color
+                              ) !important;
+                              transition: background-color 5000s ease-in-out 0s;
+                            }
+
+                            &:-webkit-autofill:focus {
+                              -webkit-text-fill-color: var(
+                                --form-color
+                              ) !important;
+                            }
+                          }
+
+                          p {
+                            color: var(--para-color);
+                            font-size: 10px;
+                          }
+                        }
+                      }
+
                       .input_wrapper {
                         display: flex;
                         flex-direction: column;
@@ -226,7 +277,6 @@
     }
   }
 }
-
 
 // @media (max-width:992px) {
 //   .upload_wrapper {

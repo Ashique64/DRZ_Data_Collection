@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import UploadModal from "../UploadModal/UploadModal";
 import {
-  LuFolder,
-  LuContact,
-  LuImage,
-  LuGlobe,
-  LuClipboardList,
   LuLink,
 } from "react-icons/lu";
 
