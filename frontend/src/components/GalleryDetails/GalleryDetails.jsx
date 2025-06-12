@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import UploadModal from "../UploadModal/UploadModal";
+import {
+  LuFolder,
+  LuContact,
+  LuImage,
+  LuGlobe,
+  LuClipboardList,
+  LuLink,
+} from "react-icons/lu";
 
 const GalleryDetails = () => {
   const [uploadType, setUploadType] = useState("");
@@ -90,6 +98,22 @@ const GalleryDetails = () => {
                   >
                     Open
                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row first_row">
+            <h4 className="mb-3 mt-5">Share Videos Link<br />
+            <span>( If largerthan 30MB )</span></h4>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="">Link</label>
+                <div className="input_items">
+                  <span>
+                    <LuLink/>
+                  </span>
+                  <input type="text" placeholder="eg:-  Youtube or any other video link" />
                 </div>
               </div>
             </div>
