@@ -21,12 +21,12 @@ const ContactDetails = () => {
     <div className="tab-panel">
       <div className="row details-row">
         <div className="title-section">
-          <h3>Contact Details</h3>
+          <h3>Contact Informations</h3>
         </div>
 
         <div className="form-section">
           <div className="row first_row">
-            <h4 className="mb-5">Operational / Support related matters</h4>
+            <h4 className="mb-5">Operational / Support Related Matters</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
                 <label htmlFor="">Contact Person Name</label>
@@ -128,7 +128,7 @@ const ContactDetails = () => {
           </div>
 
           <div className="row first_row">
-            <h4 className="my-5">Billing / Invoice related matters</h4>
+            <h4 className="my-5">Billing / Invoice Related Matters</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
                 <label htmlFor="">Contact Person Name</label>

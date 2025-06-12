@@ -9,6 +9,7 @@ import {
 } from "react-icons/lu";
 import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
 import ContactDetails from "../../components/ContactDetails/ContactDetails";
+import GalleryDetails from "../../components/GalleryDetails/GalleryDetails";
 
 const Form = () => {
   const [activeTab, setActiveTab] = useState("property-details");
@@ -104,19 +105,15 @@ const Form = () => {
                 )} */}
                 {activeTab === "property-details" && <PropertyDetails />}
                 {activeTab === "contact-details" && <ContactDetails />}
-                {activeTab === "gallery" && (
-                  <div className="tab-panel">
-                    Manage your tasks for freelancers
-                  </div>
-                )}
+                {activeTab === "gallery" && <GalleryDetails />}
                 {activeTab === "website-details" && (
                   <div className="tab-panel">
-                    Manage your tasks for freelancers
+                    Website Details
                   </div>
                 )}
                 {activeTab === "overview" && (
                   <div className="tab-panel">
-                    Manage your tasks for freelancers
+                    Overview
                   </div>
                 )}
               </div>
