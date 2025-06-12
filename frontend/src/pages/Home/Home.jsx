@@ -6,6 +6,7 @@ import BaseURL from "../../API/BaseURLS";
 import { useNavigate } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import useAutoLogout from "../../components/useAutoLogout";
 
 const Home = () => {
   const [clientEmail, setClientEmail] = useState("");
@@ -86,6 +87,7 @@ const Home = () => {
     }
   };
 
+  useAutoLogout()
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
