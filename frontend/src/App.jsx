@@ -19,7 +19,6 @@ function App() {
           }
         />
         <Route path="/form/:token" element={<Form />} />
-        {/* <Route path="/form" element={<Form />} /> */}
       </Routes>
     </Router>
   );

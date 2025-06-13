@@ -108,6 +108,14 @@
                   padding: 60px 20px;
                   border-radius: 0 0 10px 10px;
 
+                  .form-alert{
+                    background-color: #76b2f315;
+                    text-align: center;
+                    padding: 15px;
+                    border-radius: 10px;
+                    color: green;
+                  }
+
                   .terms {
                     display: flex;
                     align-items: center;
@@ -311,8 +319,3 @@
   }
 }
 
-// @media (max-width:992px) {
-//   .upload_wrapper {
-//     justify-content: space-between;
-//   }
-// }
