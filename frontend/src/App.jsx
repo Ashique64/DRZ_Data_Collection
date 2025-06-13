@@ -18,7 +18,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/form" element={<Form />} />
+        <Route path="/form/:token" element={<Form />} />
+        {/* <Route path="/form" element={<Form />} /> */}
       </Routes>
     </Router>
   );

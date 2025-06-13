@@ -18,7 +18,7 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
 
         if user:
-            print(f"User authenticated: {user}, Is superuser: {user.is_superuser}")
+            # print(f"User authenticated: {user}, Is superuser: {user.is_superuser}")
             if user.is_superuser:
                 refresh = RefreshToken.for_user(user)
                 access_token = refresh.access_token

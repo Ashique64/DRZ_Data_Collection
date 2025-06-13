@@ -1,20 +1,22 @@
 from django.db import models
-from django.contrib.auth.models import User
-from datetime import timedelta
 from django.utils import timezone
+import uuid
+import secrets
 
-# Create your models here.
-
-
-class Client(models.Model):
-    id = models.AutoField(primary_key=True)
-    email = models.EmailField(max_length=255, unique=True)
-    sent_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=32, blank=True, null=True)
-    token_created_at = models.DateTimeField(blank=True, null=True)
-
-    @property
-    def is_token_valid(self):
-        if not self.token or not self.token_created_at:
-            return False
-        return timezone.now() < self.token_created_at + timedelta(days=7)
+class FormToken(models.Model):
+    token = models.CharField(max_length=255, unique=True, default=secrets.token_urlsafe)
+    client_email = models.EmailField()
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timezone.timedelta(days=7)
+        super().save(*args, **kwargs)
+    
+    def is_valid(self):
+        return not self.is_used and self.expires_at > timezone.now()
+    
+    def __str__(self):
+        return f"Token for {self.client_email}"

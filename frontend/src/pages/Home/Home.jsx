@@ -28,7 +28,9 @@ const Home = () => {
       return;
     }
 
-    if (!clientEmail || !clientEmail.includes("@")) {
+    // Validate email format more thoroughly
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!clientEmail || !emailRegex.test(clientEmail)) {
       setMessage("Please enter a valid email address.");
       setMessageType("error");
       return;
@@ -44,50 +46,52 @@ const Home = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
-      setMessage(response.data.message);
+      setMessage(response.data.message || "Invitation sent successfully!");
       setMessageType("success");
       setClientEmail("");
     } catch (error) {
       console.error("Email send error:", error);
 
-      if (error.response?.status === 403) {
-        setMessage("Authentication failed. Please login again.");
-        setMessageType("error");
+      // Default error message
+      let errorMessage = "Error sending email. Please try again.";
 
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("username");
+      if (error.response) {
+        // Use server-provided error message if available
+        errorMessage =
+          error.response.data.error ||
+          error.response.data.message ||
+          errorMessage;
 
-        setTimeout(() => {
-          navigate("/", { replace: true });
-        }, 2000);
-      } else if (error.response?.status === 401) {
-        setMessage("Session expired. Please login again.");
-        setMessageType("error");
-        setTimeout(() => {
-          navigate("/", { replace: true });
-        }, 2000);
-      } else if (error.response?.status === 400) {
-        setMessage(error.response.data.error || "Invalid request.");
-        setMessageType("error");
-      } else if (error.response?.status >= 500) {
-        setMessage("Server error. Please try again later.");
-        setMessageType("error");
-      } else {
-        setMessage("Error sending email. Please try again.");
-        setMessageType("error");
+        // Handle specific status codes
+        if (error.response.status === 403 || error.response.status === 401) {
+          errorMessage = "Session expired. Please login again.";
+          clearAuthDataAndRedirect();
+        }
       }
+
+      setMessage(errorMessage);
+      setMessageType("error");
     } finally {
       setLoading(false);
     }
   };
 
-  useAutoLogout()
+  const clearAuthDataAndRedirect = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 2000);
+  };
+
+  useAutoLogout();
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {

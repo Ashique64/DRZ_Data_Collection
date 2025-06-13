@@ -7,15 +7,46 @@ import {
   LuGlobe,
   LuClipboardList,
 } from "react-icons/lu";
+
+import { useParams } from "react-router-dom";
 import PropertyDetails from "../../components/PropertyDetails/PropertyDetails";
 import ContactDetails from "../../components/ContactDetails/ContactDetails";
 import GalleryDetails from "../../components/GalleryDetails/GalleryDetails";
 import WebsiteDetails from "../../components/WebsiteDetails/WebsiteDetails";
 import Overview from "../../components/Overview/Overview";
+import BaseURL from "../../API/BaseURLS";
+import AccessDenied from "../AccessDenied/AccessDenied";
 
 const Form = () => {
+  const { token } = useParams();
   const [activeTab, setActiveTab] = useState("property-details");
   const tabsHeaderRef = useRef(null);
+  const [isValidToken, setIsValidToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const verifyToken = async () => {
+    try {
+      const response = await fetch(
+        `${BaseURL}/api/email/verify-token/${token}/`
+      );
+      const data = await response.json();
+
+      if (data.valid) {
+        setIsValidToken(true);
+      } else {
+        setIsValidToken(false);
+      }
+    } catch (error) {
+      console.error("Token verification failed:", error);
+      setIsValidToken(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    verifyToken();
+  }, [token]);
 
   useEffect(() => {
     if (tabsHeaderRef.current) {
@@ -30,6 +61,59 @@ const Form = () => {
       }
     }
   }, [activeTab]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div id="form">
+        <div className="container form-container">
+          <div className="row form-row">
+            <div className="col-md-12 form-col">
+              <div
+                className="loading-container"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "400px",
+                  flexDirection: "column",
+                }}
+              >
+                <div
+                  className="spinner"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    border: "4px solid #f3f3f3",
+                    borderTop: "4px solid #3498db",
+                    borderRadius: "50%",
+                    animation: "spin 1s linear infinite",
+                    marginBottom: "20px",
+                  }}
+                ></div>
+                <div style={{ fontSize: "18px", color: "#666" }}>
+                  Verifying access...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // Invalid token state
+  if (!isValidToken) {
+    return (
+      <AccessDenied/>
+    );
+  }
 
   return (
     <div id="form">
@@ -105,11 +189,11 @@ const Form = () => {
                     </div>
                   </div>
                 )} */}
-                {activeTab === "property-details" && <PropertyDetails />}
-                {activeTab === "contact-details" && <ContactDetails />}
-                {activeTab === "gallery" && <GalleryDetails />}
-                {activeTab === "website-details" && <WebsiteDetails />}
-                {activeTab === "overview" && <Overview />}
+                {activeTab === "property-details" && <PropertyDetails token={token} />}
+                {activeTab === "contact-details" && <ContactDetails token={token} />}
+                {activeTab === "gallery" && <GalleryDetails token={token} />}
+                {activeTab === "website-details" && <WebsiteDetails token={token} />}
+                {activeTab === "overview" && <Overview token={token} />}
               </div>
             </div>
           </div>
