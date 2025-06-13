@@ -19,8 +19,8 @@ import {
   LuArrowRight,
 } from "react-icons/lu";
 
-const PropertyDetails = ({ sessionId, onSave }) => {
-  const [formData, setFormData] = useState({
+const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
+  const [formData, setFormData] = useState(initialData ||{
     property_name: "",
     property_address: "",
     property_city: "",
@@ -39,12 +39,6 @@ const PropertyDetails = ({ sessionId, onSave }) => {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    if (sessionId) {
-      loadExistingData();
-    }
-  }, [sessionId]);
 
   const loadExistingData = async () => {
     setLoading(true);
@@ -66,6 +60,12 @@ const PropertyDetails = ({ sessionId, onSave }) => {
     }
   };
 
+  useEffect(() => {
+    if (sessionId) {
+      loadExistingData();
+    }
+  }, [sessionId]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -73,7 +73,6 @@ const PropertyDetails = ({ sessionId, onSave }) => {
       [name]: value,
     }));
 
-    // Clear error for this field
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -102,7 +101,6 @@ const PropertyDetails = ({ sessionId, onSave }) => {
       newErrors.property_phone = "Property phone is required";
     }
 
-    // Email validation
     if (
       formData.property_email &&
       !/\S+@\S+\.\S+/.test(formData.property_email)
@@ -110,7 +108,6 @@ const PropertyDetails = ({ sessionId, onSave }) => {
       newErrors.property_email = "Please enter a valid email";
     }
 
-    // Website URL validation
     if (
       formData.property_website &&
       !formData.property_website.startsWith("http")
@@ -145,6 +142,7 @@ const PropertyDetails = ({ sessionId, onSave }) => {
       if (result.success) {
         if (showMessage) {
           setMessage("Property Information saved successfully!");
+          console.log(message);
           setTimeout(() => setMessage(""), 3000);
         }
 
@@ -166,16 +164,14 @@ const PropertyDetails = ({ sessionId, onSave }) => {
     }
   };
 
-  const handleSave = async () => {
-    await saveData(true);
+  const handleNext = async () => {
+    const saved = await saveData(false);
+    if (saved && onNext) {
+      setTimeout(() => {
+        onNext();
+      }, 2000);
+    }
   };
-
-  // const handleNext = async () => {
-  //   const saved = await saveData(false);
-  //   if (saved && onNext) {
-  //     onNext();
-  //   }
-  // };
 
   if (loading) {
     return (
@@ -203,18 +199,6 @@ const PropertyDetails = ({ sessionId, onSave }) => {
         </div>
 
         <div className="form-section">
-          {message && (
-            <div
-              className={`form-alert ${
-                message.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
-              }`}
-              role="alert"
-            >
-              {message}
-            </div>
-          )}
           <div className="row first_row">
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
@@ -500,23 +484,23 @@ const PropertyDetails = ({ sessionId, onSave }) => {
             </div>
           </div>
           <div className="save-btn">
-            <button className="btn" onClick={handleSave} disabled={saving}>
-              {saving ? (
-                <LuLoader className="me-2" />
-              ) : (
-                <LuSave className="me-2" />
-              )}
-              Save
-            </button>
-
-            {/* <button
+            <button
               onClick={handleNext}
               disabled={saving}
-              className="inline-flex items-center px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn btn-transperant d-inline-flex justify-content-center align-items-center px-4 py-2 disabled:opacity-50"
             >
-              Save & Next
-              <LuArrowRight className="w-4 h-4 ml-2" />
-            </button> */}
+              {saving ? (
+                <>
+                  <LuLoader className="me-2 spinner-border spinner-border-sm" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  Save & Next
+                  <LuArrowRight className="ms-2" />
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>

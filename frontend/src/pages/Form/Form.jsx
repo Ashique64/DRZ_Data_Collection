@@ -25,6 +25,7 @@ const Form = () => {
   const [isValidToken, setIsValidToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sessionId, setSessionId] = useState(null);
+  const [propertyData, setPropertyData] = useState({});
 
   const verifyToken = async () => {
     try {
@@ -175,16 +176,40 @@ const Form = () => {
                   </div>
                 )} */}
                 {activeTab === "property-details" && (
-                  <PropertyDetails token={token} sessionId={sessionId}/>
+                  <PropertyDetails
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => {
+                      setPropertyData(propertyData);
+                      setActiveTab("contact-details");
+                    }}
+                    initialData={propertyData}
+                  />
                 )}
                 {activeTab === "contact-details" && (
-                  <ContactDetails token={token} sessionId={sessionId}/>
+                  <ContactDetails
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => setActiveTab("gallery")}
+                  />
                 )}
-                {activeTab === "gallery" && <GalleryDetails token={token} sessionId={sessionId}/>}
+                {activeTab === "gallery" && (
+                  <GalleryDetails
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => setActiveTab("website-details")}
+                  />
+                )}
                 {activeTab === "website-details" && (
                   <WebsiteDetails token={token} />
                 )}
-                {activeTab === "overview" && <Overview token={token} sessionId={sessionId}/>}
+                {activeTab === "overview" && (
+                  <Overview
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => setActiveTab("overview")}
+                  />
+                )}
               </div>
             </div>
           </div>
