@@ -118,6 +118,37 @@ class MediaFile(models.Model):
 
 
 
+class WebsiteDetails(models.Model):
+    """Page 4: Website and Social Media Information"""
+
+    form_session = models.OneToOneField(
+        FormSession, on_delete=models.CASCADE, related_name="website_details"
+    )
+
+    # Website Details
+    property_logo = models.ImageField(upload_to="logos/", blank=True, null=True)
+    website_name = models.CharField(max_length=255, blank=True, null=True)
+    about_us_content = models.TextField(blank=True, null=True)
+    additional_content = models.TextField(blank=True, null=True)
+
+    # Domain Related Information
+    domain_url = models.URLField(blank=True, null=True)
+    domain_password = models.CharField(max_length=255, blank=True, null=True)
+    domain_username = models.CharField(max_length=255, blank=True, null=True)
+    existing_website_link = models.URLField(blank=True, null=True)
+
+    # Social Media Information
+    whatsapp = models.CharField(max_length=255, blank=True, null=True)
+    facebook = models.CharField(max_length=255, blank=True, null=True)
+    instagram = models.CharField(max_length=255, blank=True, null=True)
+    twitter = models.CharField(max_length=255, blank=True, null=True)
+
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Website Details - {self.website_name}"
 
 
 
@@ -130,53 +161,6 @@ class MediaFile(models.Model):
 
 
 
-
-
-
-
-
-
-# class GalleryDetails(models.Model):
-#     """Page 3: Gallery and Media"""
-
-#     form_session = models.OneToOneField(
-#         FormSession, on_delete=models.CASCADE, related_name="gallery_details"
-#     )
-
-#     # Gallery - File references will be stored in separate model
-#     video_links = models.TextField(blank=True, null=True)
-#     gallery_description = models.TextField(blank=True, null=True)
-
-#     is_completed = models.BooleanField(default=False)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-
-#     def __str__(self):
-#         return f"Gallery Details - {self.form_session.session_id}"
-
-
-# class MediaFile(models.Model):
-#     """Store all media files for gallery"""
-
-#     gallery_details = models.ForeignKey(
-#         GalleryDetails, on_delete=models.CASCADE, related_name="media_files"
-#     )
-#     file_type = models.CharField(
-#         max_length=50,
-#         choices=[
-#             ("primary_image", "Primary Image"),
-#             ("secondary_image", "Secondary Image"),
-#             ("primary_video", "Primary Video"),
-#             ("secondary_video", "Secondary Video"),
-#         ],
-#     )
-#     file = models.FileField(upload_to="gallery_files/")
-#     file_name = models.CharField(max_length=255)
-#     file_size = models.BigIntegerField(null=True, blank=True)
-#     uploaded_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"{self.file_type} - {self.file_name}"
 
 
 # class WebsiteDetails(models.Model):

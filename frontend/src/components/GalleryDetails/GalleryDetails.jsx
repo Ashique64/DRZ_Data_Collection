@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import UploadModal from "../UploadModal/UploadModal";
-import { LuArrowRight, LuImage, LuLink, LuLoader, LuTrash2, LuVideo } from "react-icons/lu";
+import {
+  LuArrowRight,
+  LuImage,
+  LuLink,
+  LuLoader,
+  LuTrash2,
+  LuVideo,
+} from "react-icons/lu";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS";
 
@@ -23,8 +30,7 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   const loadExistingData = async () => {
     if (!sessionId) return;
-    
-    setLoading(true);
+
     try {
       const response = await axios.get(
         `${BaseURL}/api/data/gallery-details/${sessionId}/`
@@ -51,7 +57,7 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         ...initialData,
       }));
@@ -63,7 +69,7 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleOpenModal = (type, section) => {
@@ -75,8 +81,8 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const handleUpload = async (files, type, section) => {
     const fieldName = `${section}_${type === "images" ? "images" : "videos"}`;
     const formData = new FormData();
-    
-    files.forEach(file => {
+
+    files.forEach((file) => {
       formData.append(fieldName, file);
     });
 
@@ -132,7 +138,10 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '16rem' }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "16rem" }}
+      >
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -152,7 +161,7 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
           section={currentSection}
         />
       )}
-      
+
       <div className="row details-row">
         <div className="title-section">
           <h3>Photos & Videos</h3>
@@ -232,7 +241,9 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
               <div className="input_wrapper">
                 <label>Video Links (one per line)</label>
                 <div className="input_items">
-                  <span><LuLink /></span>
+                  <span>
+                    <LuLink />
+                  </span>
                   <textarea
                     name="video_links"
                     value={formData.video_links}
@@ -244,20 +255,21 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
             </div>
           </div>
 
-          <div className="save-btn mt-5">
+          <div className="save-btn">
             <button
               onClick={handleNext}
               disabled={saving}
-              className="btn btn-primary"
+              className="btn btn-transperant d-inline-flex justify-content-center align-items-center px-4 py-2 disabled:opacity-50"
             >
               {saving ? (
                 <>
-                  <LuLoader className="me-2 spinner" />
+                  <LuLoader className="me-2 spinner-border spinner-border-sm" />
                   Saving...
                 </>
               ) : (
                 <>
-                  Save & Next <LuArrowRight className="ms-2" />
+                  Save & Next
+                  <LuArrowRight className="ms-2" />
                 </>
               )}
             </button>

@@ -4,8 +4,9 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 import uuid, json
-from .models import FormSession, PropertyDetails, ContactDetails, GalleryDetails, MediaFile
+from .models import FormSession, PropertyDetails, ContactDetails, GalleryDetails, MediaFile, WebsiteDetails
 from email_management.models import FormToken
+from django.core.exceptions import ValidationError
 
 
 class InitializeFormSessionView(APIView):
@@ -440,92 +441,159 @@ class SaveGalleryDetailsView(APIView):
 
 # -------------------------------------------------------------------------------------------------
 
+class SaveWebsiteDetailsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, session_id):
+        """Fetch existing website details for a session"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
+
+            try:
+                website_details = WebsiteDetails.objects.get(
+                    form_session=form_session
+                )
+
+                data = {
+                    "website_name": website_details.website_name,
+                    "about_us_content": website_details.about_us_content,
+                    "additional_content": website_details.additional_content,
+                    "domain_url": website_details.domain_url,
+                    "domain_password": website_details.domain_password,
+                    "domain_username": website_details.domain_username,
+                    "existing_website_link": website_details.existing_website_link,
+                    "whatsapp": website_details.whatsapp,
+                    "facebook": website_details.facebook,
+                    "instagram": website_details.instagram,
+                    "twitter": website_details.twitter,
+                    "property_logo": website_details.property_logo.url if website_details.property_logo else None,
+                    "is_completed": website_details.is_completed,
+                }
+
+                return Response(
+                    {"success": True, "data": data}, status=status.HTTP_200_OK
+                )
+
+            except WebsiteDetails.DoesNotExist:
+                return Response(
+                    {"success": True, "data": {}}, status=status.HTTP_200_OK
+                )
+
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    def post(self, request, session_id):
+        """Save or update website details with file upload"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
+            data = request.data
+            files = request.FILES
+
+            # Create or update website details
+            website_details, created = WebsiteDetails.objects.get_or_create(
+                form_session=form_session,
+                defaults={
+                    "website_name": data.get("website_name", ""),
+                    "about_us_content": data.get("about_us_content", ""),
+                    "additional_content": data.get("additional_content", ""),
+                    "domain_url": data.get("domain_url", ""),
+                    "domain_password": data.get("domain_password", ""),
+                    "domain_username": data.get("domain_username", ""),
+                    "existing_website_link": data.get("existing_website_link", ""),
+                    "whatsapp": data.get("whatsapp", ""),
+                    "facebook": data.get("facebook", ""),
+                    "instagram": data.get("instagram", ""),
+                    "twitter": data.get("twitter", ""),
+                    "is_completed": True,
+                },
+            )
+
+            if not created:
+                # Update existing record
+                website_details.website_name = data.get(
+                    "website_name", website_details.website_name
+                )
+                website_details.about_us_content = data.get(
+                    "about_us_content", website_details.about_us_content
+                )
+                website_details.additional_content = data.get(
+                    "additional_content", website_details.additional_content
+                )
+                website_details.domain_url = data.get(
+                    "domain_url", website_details.domain_url
+                )
+                website_details.domain_password = data.get(
+                    "domain_password", website_details.domain_password
+                )
+                website_details.domain_username = data.get(
+                    "domain_username", website_details.domain_username
+                )
+                website_details.existing_website_link = data.get(
+                    "existing_website_link", website_details.existing_website_link
+                )
+                website_details.whatsapp = data.get("whatsapp", website_details.whatsapp)
+                website_details.facebook = data.get("facebook", website_details.facebook)
+                website_details.instagram = data.get("instagram", website_details.instagram)
+                website_details.twitter = data.get("twitter", website_details.twitter)
+                website_details.is_completed = True
+                website_details.save()
+
+            if "property_logo" in files:
+                valid_types = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+                if files["property_logo"].content_type not in valid_types:
+                    raise ValidationError("Only PNG, JPEG, JPG, and SVG files are allowed")
+                
+                if files["property_logo"].size > 5 * 1024 * 1024:
+                    raise ValidationError("File size must be less than 5MB")
+                
+                website_details.property_logo = files["property_logo"]
+                website_details.save()
+
+            if form_session.current_step < 5:
+                form_session.current_step = 5
+                form_session.save()
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Website details saved successfully",
+                    "next_step": 5,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except ValidationError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        
+
+# ---------------------------------------------------------------------------------------------
 
 
 
 
 
 
-
-
-
-
-
-
-
-# @csrf_exempt
-# @require_http_methods(["POST"])
-# def save_gallery_details(request, session_id):
-#     """Save or update gallery details with file uploads (Page 3)"""
-#     try:
-#         form_session = get_object_or_404(FormSession, session_id=session_id)
-
-#         # Handle both JSON and form data
-#         if request.content_type == "application/json":
-#             data = json.loads(request.body)
-#             files = {}
-#         else:
-#             data = request.POST
-#             files = request.FILES
-
-#         # Create or update gallery details
-#         gallery_details, created = GalleryDetails.objects.get_or_create(
-#             form_session=form_session,
-#             defaults={
-#                 "video_links": data.get("video_links", ""),
-#                 "gallery_description": data.get("gallery_description", ""),
-#                 "is_completed": True,
-#             },
-#         )
-
-#         if not created:
-#             # Update existing record
-#             gallery_details.video_links = data.get(
-#                 "video_links", gallery_details.video_links
-#             )
-#             gallery_details.gallery_description = data.get(
-#                 "gallery_description", gallery_details.gallery_description
-#             )
-#             gallery_details.is_completed = True
-#             gallery_details.save()
-
-#         # Handle file uploads
-#         file_types = {
-#             "primary_images": "primary_image",
-#             "secondary_images": "secondary_image",
-#             "primary_videos": "primary_video",
-#             "secondary_videos": "secondary_video",
-#         }
-
-#         for field_name, file_type in file_types.items():
-#             if field_name in files:
-#                 file_list = files.getlist(field_name)
-#                 for file in file_list:
-#                     MediaFile.objects.create(
-#                         gallery_details=gallery_details,
-#                         file_type=file_type,
-#                         file=file,
-#                         file_name=file.name,
-#                         file_size=file.size,
-#                     )
-
-#         # Update session current step
-#         if form_session.current_step < 4:
-#             form_session.current_step = 4
-#             form_session.save()
-
-#         return JsonResponse(
-#             {
-#                 "success": True,
-#                 "message": "Gallery details saved successfully",
-#                 "next_step": 4,
-#             }
-#         )
-
-#     except FormSession.DoesNotExist:
-#         return JsonResponse({"error": "Invalid session"}, status=404)
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=500)
 
 
 # @csrf_exempt

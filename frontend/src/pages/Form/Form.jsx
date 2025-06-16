@@ -28,6 +28,7 @@ const Form = () => {
   const [propertyData, setPropertyData] = useState({});
   const [contactData, setContactData] = useState({});
   const [galleryData, setGalleryData] = useState({});
+  const [websitDetails, setWebsitDetails] = useState({});
 
   const verifyToken = async () => {
     try {
@@ -211,13 +212,20 @@ const Form = () => {
                   />
                 )}
                 {activeTab === "website-details" && (
-                  <WebsiteDetails token={token} />
+                  <WebsiteDetails
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => {
+                      setWebsitDetails(websitDetails);
+                      setActiveTab("overview");
+                    }}
+                    initialData={websitDetails}
+                  />
                 )}
                 {activeTab === "overview" && (
                   <Overview
                     token={token}
                     sessionId={sessionId}
-                    onNext={() => setActiveTab("overview")}
                   />
                 )}
               </div>

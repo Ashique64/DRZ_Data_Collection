@@ -4,6 +4,7 @@ from .views import (
     SavePropertyDetailsView,
     SaveContactDetailsView,
     SaveGalleryDetailsView,
+    SaveWebsiteDetailsView
 )
 
 urlpatterns = [
@@ -26,5 +27,10 @@ urlpatterns = [
         "gallery-details/<str:session_id>/",
         SaveGalleryDetailsView.as_view(),
         name="save_contact_details",
+    ),
+    path(
+        "website-details/<str:session_id>/",
+        SaveWebsiteDetailsView.as_view(),
+        name="save-website-details",
     ),
 ]
