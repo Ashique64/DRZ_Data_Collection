@@ -17,7 +17,7 @@ urlpatterns = [
         name="save_property_details",
     ),
     path(
-        "save-contact-details/<str:session_id>/",
+        "contact-details/<str:session_id>/",
         SaveContactDetailsView.as_view(),
         name="save_contact_details",
     ),

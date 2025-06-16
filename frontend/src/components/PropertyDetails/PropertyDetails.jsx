@@ -43,7 +43,7 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   const loadExistingData = async () => {
     if (!sessionId) return;
-    
+
     setLoading(true);
     try {
       const response = await axios.get(
@@ -51,38 +51,31 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
       );
 
       if (response.data.success && response.data.data) {
-        // Only update form data if we actually have saved data
         setFormData(response.data.data);
-        console.log("Loaded existing data:", response.data.data);
       }
     } catch (error) {
       console.error("Error loading existing data:", error);
-      // Don't clear form data on error - keep what user had entered
     } finally {
       setLoading(false);
       setDataLoaded(true);
     }
   };
 
-  // Load initial data on component mount
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-      // If initialData is provided, use it
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         ...initialData,
       }));
       setDataLoaded(true);
     } else if (sessionId && !dataLoaded) {
-      // Otherwise, try to load from server
       loadExistingData();
     }
-  }, [sessionId]); // Only depend on sessionId
+  }, [sessionId]);
 
-  // Handle initialData changes separately
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0 && !dataLoaded) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         ...initialData,
       }));
@@ -169,14 +162,10 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
           setTimeout(() => setMessage(""), 3000);
         }
 
-        // Call onSave callback but don't modify formData
         if (onSave) {
           onSave("property", formData);
         }
 
-        // Ensure formData is preserved after save
-        console.log("Form data after save:", formData);
-        
         return true;
       } else {
         setMessage(result.error || "Failed to save property details");
@@ -194,11 +183,15 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const handleNext = async () => {
     const saved = await saveData(false);
     if (saved && onNext) {
-      // Navigate after a short delay to ensure state is preserved
       setTimeout(() => {
         onNext();
-      }, 100);
+      }, 1000);
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await saveData();
   };
 
   if (loading) {
@@ -227,297 +220,303 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
         </div>
 
         {message && (
-          <div className="alert alert-success alert-dismissible fade show" role="alert">
+          <div
+            className="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
             {message}
           </div>
         )}
 
         <div className="form-section">
-          <div className="row first_row">
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_name">Property / Business Name</label>
-                <div className="input_items">
-                  <span>
-                    <LuBuilding2 />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_name"
-                    id="property_name"
-                    value={formData.property_name}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_name && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_name}
+          <form onSubmit={handleSubmit}>
+            <div className="row first_row">
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_name">
+                    Property / Business Name
+                  </label>
+                  <div className="input_items">
+                    <span>
+                      <LuBuilding2 />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_name"
+                      id="property_name"
+                      value={formData.property_name}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                )}
+                  {errors.property_name && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_name}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_address">Property Address</label>
+                  <div className="input_items">
+                    <span>
+                      <LuMapPin />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_address"
+                      id="property_address"
+                      value={formData.property_address}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.property_address && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_address}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_address">Property Address</label>
-                <div className="input_items">
-                  <span>
-                    <LuMapPin />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_address"
-                    id="property_address"
-                    value={formData.property_address}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_address && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_address}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
 
-          <div className="row first_row">
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_city">Property City</label>
-                <div className="input_items">
-                  <span>
-                    <LuLandPlot />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_city"
-                    id="property_city"
-                    value={formData.property_city}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_city && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_city}
+            <div className="row first_row">
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_city">Property City</label>
+                  <div className="input_items">
+                    <span>
+                      <LuLandPlot />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_city"
+                      id="property_city"
+                      value={formData.property_city}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                )}
+                  {errors.property_city && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_city}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_state">
+                    Property State / Province
+                  </label>
+                  <div className="input_items">
+                    <span>
+                      <LuLandmark />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_state"
+                      id="property_state"
+                      value={formData.property_state}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.property_state && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_state}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_state">
-                  Property State / Province
-                </label>
-                <div className="input_items">
-                  <span>
-                    <LuLandmark />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_state"
-                    id="property_state"
-                    value={formData.property_state}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_state && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_state}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
 
-          <div className="row first_row">
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="zip_code">Zip/Pin/Postal Code</label>
-                <div className="input_items">
-                  <span>
-                    <LuMail />
-                  </span>
-                  <input
-                    type="text"
-                    name="zip_code"
-                    id="zip_code"
-                    value={formData.zip_code}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.zip_code && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.zip_code}
+            <div className="row first_row">
+              <div className="col-md-6 col-lg-3 item">
+                <div className="input_wrapper">
+                  <label htmlFor="zip_code">Zip/Pin/Postal Code</label>
+                  <div className="input_items">
+                    <span>
+                      <LuMail />
+                    </span>
+                    <input
+                      type="text"
+                      name="zip_code"
+                      id="zip_code"
+                      value={formData.zip_code}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                )}
+                  {errors.zip_code && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.zip_code}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6 col-lg-3 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_country">Property Country</label>
+                  <div className="input_items">
+                    <span>
+                      <LuGlobe />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_country"
+                      id="property_country"
+                      value={formData.property_country}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.property_country && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_country}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6 col-lg-3 item">
+                <div className="input_wrapper">
+                  <label htmlFor="bill_to_company">
+                    Bill To Company / Organization
+                  </label>
+                  <div className="input_items">
+                    <span>
+                      <LuBriefcase />
+                    </span>
+                    <input
+                      type="text"
+                      name="bill_to_company"
+                      id="bill_to_company"
+                      value={formData.bill_to_company}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.bill_to_company && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.bill_to_company}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6 col-lg-3 item">
+                <div className="input_wrapper">
+                  <label htmlFor="gst_number">GST Number</label>
+                  <div className="input_items">
+                    <span>
+                      <LuFileText />
+                    </span>
+                    <input
+                      type="text"
+                      name="gst_number"
+                      id="gst_number"
+                      value={formData.gst_number}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.gst_number && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.gst_number}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_country">Property Country</label>
-                <div className="input_items">
-                  <span>
-                    <LuGlobe />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_country"
-                    id="property_country"
-                    value={formData.property_country}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_country && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_country}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="bill_to_company">
-                  Bill To Company / Organization
-                </label>
-                <div className="input_items">
-                  <span>
-                    <LuBriefcase />
-                  </span>
-                  <input
-                    type="text"
-                    name="bill_to_company"
-                    id="bill_to_company"
-                    value={formData.bill_to_company}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.bill_to_company && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.bill_to_company}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="col-md-6 col-lg-3 item">
-              <div className="input_wrapper">
-                <label htmlFor="gst_number">GST Number</label>
-                <div className="input_items">
-                  <span>
-                    <LuFileText />
-                  </span>
-                  <input
-                    type="text"
-                    name="gst_number"
-                    id="gst_number"
-                    value={formData.gst_number}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.gst_number && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.gst_number}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
 
-          <div className="row first_row">
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_phone">Property Phone Number</label>
-                <div className="input_items">
-                  <span>
-                    <LuPhone />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_phone"
-                    id="property_phone"
-                    value={formData.property_phone}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_phone && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_phone}
+            <div className="row first_row">
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_phone">Property Phone Number</label>
+                  <div className="input_items">
+                    <span>
+                      <LuPhone />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_phone"
+                      id="property_phone"
+                      value={formData.property_phone}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                )}
+                  {errors.property_phone && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_phone}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="reservation_phone">
+                    Reservation Phone Number
+                  </label>
+                  <div className="input_items">
+                    <span>
+                      <LuPhoneCall />
+                    </span>
+                    <input
+                      type="text"
+                      name="reservation_phone"
+                      id="reservation_phone"
+                      value={formData.reservation_phone}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.reservation_phone && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.reservation_phone}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="reservation_phone">
-                  Reservation Phone Number
-                </label>
-                <div className="input_items">
-                  <span>
-                    <LuPhoneCall />
-                  </span>
-                  <input
-                    type="text"
-                    name="reservation_phone"
-                    id="reservation_phone"
-                    value={formData.reservation_phone}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.reservation_phone && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.reservation_phone}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
 
-          <div className="row first_row">
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_email">Property Email</label>
-                <div className="input_items">
-                  <span>
-                    <LuMailOpen />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_email"
-                    id="property_email"
-                    value={formData.property_email}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_email && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_email}
+            <div className="row first_row">
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_email">Property Email</label>
+                  <div className="input_items">
+                    <span>
+                      <LuMailOpen />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_email"
+                      id="property_email"
+                      value={formData.property_email}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                )}
+                  {errors.property_email && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_email}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-12 col-lg-6 item">
+                <div className="input_wrapper">
+                  <label htmlFor="property_website">Property Website URL</label>
+                  <div className="input_items">
+                    <span>
+                      <LuGlobeLock />
+                    </span>
+                    <input
+                      type="text"
+                      name="property_website"
+                      id="property_website"
+                      value={formData.property_website}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {errors.property_website && (
+                    <div className="invalid-feedback d-block ms-4">
+                      {errors.property_website}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="property_website">Property Website URL</label>
-                <div className="input_items">
-                  <span>
-                    <LuGlobeLock />
-                  </span>
-                  <input
-                    type="text"
-                    name="property_website"
-                    id="property_website"
-                    value={formData.property_website}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.property_website && (
-                  <div className="invalid-feedback d-block ms-4">
-                    {errors.property_website}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="save-btn">
+            {/* <div className="save-btn">
             <button
               onClick={handleNext}
               disabled={saving}
@@ -535,7 +534,23 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
                 </>
               )}
             </button>
-          </div>
+          </div> */}
+            <div className="save-btn">
+              <button type="submit" className="btn" disabled={saving}>
+                {saving ? "Saving..." : "Save"}
+              </button>
+              {onNext && (
+                <button
+                  type="button"
+                  className="btn btn-primary ms-3"
+                  onClick={handleNext}
+                  disabled={saving}
+                >
+                  Next
+                </button>
+              )}
+            </div>
+          </form>
         </div>
       </div>
     </div>

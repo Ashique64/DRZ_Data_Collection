@@ -108,7 +108,7 @@
                   padding: 60px 20px;
                   border-radius: 0 0 10px 10px;
 
-                  .form-alert{
+                  .form-alert {
                     background-color: #76b2f315;
                     text-align: center;
                     padding: 15px;
@@ -293,16 +293,29 @@
 
                   .save-btn {
                     display: flex;
+                    gap: 10px;
                     justify-content: center;
                     margin-top: 15px;
+                    overflow: hidden;
+                    padding: 10px;
 
                     button {
                       outline: 1px solid var(--accent-color);
+                      background: transparent;
                       color: var(--primary-color);
                       width: 180px;
                       height: 45px;
                       font-weight: 700;
                       transition: 0.3s ease-in-out;
+
+                      &[type="button"] {
+                        background: var(--accent-color);
+
+                        &:hover {
+                        background: transparent;
+                      }
+                        
+                      }
 
                       &:hover {
                         background: var(--accent-color);
@@ -319,3 +332,13 @@
   }
 }
 
+@media (max-width: 767px) {
+  .save-btn {
+    flex-direction: column;
+    align-items: center;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
