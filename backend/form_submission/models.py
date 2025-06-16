@@ -81,15 +81,40 @@ class ContactDetails(models.Model):
         return f"Contact Details - {self.form_session.session_id}"
 
 
+class GalleryDetails(models.Model):
+    """Page 3: Gallery and Media"""
+    form_session = models.OneToOneField(
+        FormSession, on_delete=models.CASCADE, related_name="gallery_details"
+    )
+    video_links = models.TextField(blank=True, null=True)
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Gallery Details - {self.form_session.session_id}"
 
 
+class MediaFile(models.Model):
+    """Media files associated with gallery details"""
+    FILE_TYPES = [
+        ('primary_image', 'Primary Image'),
+        ('secondary_image', 'Secondary Image'),
+        ('primary_video', 'Primary Video'),
+        ('secondary_video', 'Secondary Video'),
+    ]
+    
+    gallery_details = models.ForeignKey(
+        GalleryDetails, on_delete=models.CASCADE, related_name="media_files"
+    )
+    file_type = models.CharField(max_length=20, choices=FILE_TYPES)
+    file = models.FileField(upload_to='gallery_media/')
+    file_name = models.CharField(max_length=255)
+    file_size = models.PositiveIntegerField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
-
-
-
-
-
-
+    def __str__(self):
+        return f"{self.get_file_type_display()} - {self.file_name}"
 
 
 
@@ -130,6 +155,30 @@ class ContactDetails(models.Model):
 #         return f"Gallery Details - {self.form_session.session_id}"
 
 
+# class MediaFile(models.Model):
+#     """Store all media files for gallery"""
+
+#     gallery_details = models.ForeignKey(
+#         GalleryDetails, on_delete=models.CASCADE, related_name="media_files"
+#     )
+#     file_type = models.CharField(
+#         max_length=50,
+#         choices=[
+#             ("primary_image", "Primary Image"),
+#             ("secondary_image", "Secondary Image"),
+#             ("primary_video", "Primary Video"),
+#             ("secondary_video", "Secondary Video"),
+#         ],
+#     )
+#     file = models.FileField(upload_to="gallery_files/")
+#     file_name = models.CharField(max_length=255)
+#     file_size = models.BigIntegerField(null=True, blank=True)
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f"{self.file_type} - {self.file_name}"
+
+
 # class WebsiteDetails(models.Model):
 #     """Page 4: Website and Social Media Information"""
 
@@ -163,28 +212,7 @@ class ContactDetails(models.Model):
 #         return f"Website Details - {self.website_name}"
 
 
-# class MediaFile(models.Model):
-#     """Store all media files for gallery"""
 
-#     gallery_details = models.ForeignKey(
-#         GalleryDetails, on_delete=models.CASCADE, related_name="media_files"
-#     )
-#     file_type = models.CharField(
-#         max_length=50,
-#         choices=[
-#             ("primary_image", "Primary Image"),
-#             ("secondary_image", "Secondary Image"),
-#             ("primary_video", "Primary Video"),
-#             ("secondary_video", "Secondary Video"),
-#         ],
-#     )
-#     file = models.FileField(upload_to="gallery_files/")
-#     file_name = models.CharField(max_length=255)
-#     file_size = models.BigIntegerField(null=True, blank=True)
-#     uploaded_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"{self.file_type} - {self.file_name}"
 
 
 # class FinalSubmission(models.Model):

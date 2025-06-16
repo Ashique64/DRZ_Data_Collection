@@ -3,6 +3,7 @@ from .views import (
     InitializeFormSessionView,
     SavePropertyDetailsView,
     SaveContactDetailsView,
+    SaveGalleryDetailsView,
 )
 
 urlpatterns = [
@@ -19,6 +20,11 @@ urlpatterns = [
     path(
         "contact-details/<str:session_id>/",
         SaveContactDetailsView.as_view(),
+        name="save_contact_details",
+    ),
+    path(
+        "gallery-details/<str:session_id>/",
+        SaveGalleryDetailsView.as_view(),
         name="save_contact_details",
     ),
 ]

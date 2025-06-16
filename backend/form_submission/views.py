@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 import uuid, json
-from .models import FormSession, PropertyDetails, ContactDetails
+from .models import FormSession, PropertyDetails, ContactDetails, GalleryDetails, MediaFile
 from email_management.models import FormToken
 
 
@@ -284,91 +284,173 @@ class SaveContactDetailsView(APIView):
 
 # ---------------------------------------------------------------------------------------------
 
+class SaveGalleryDetailsView(APIView):
+    permission_classes = [AllowAny]
 
-# @csrf_exempt
-# @require_http_methods(["POST"])
-# def save_contact_details(request, session_id):
-#     """Save or update contact details (Page 2)"""
-#     try:
-#         form_session = get_object_or_404(FormSession, session_id=session_id)
+    def get(self, request, session_id):
+        """Fetch existing gallery details for a session"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
 
-#         # Parse form data
-#         data = json.loads(request.body)
+            try:
+                gallery_details = GalleryDetails.objects.get(
+                    form_session=form_session
+                )
+                
+                media_files = MediaFile.objects.filter(gallery_details=gallery_details)
+                media_data = {
+                    "primary_images": [],
+                    "secondary_images": [],
+                    "primary_videos": [],
+                    "secondary_videos": [],
+                }
+                
+                for file in media_files:
+                    if file.file_type == "primary_image":
+                        media_data["primary_images"].append({
+                            "id": file.id,
+                            "url": file.file.url,
+                            "name": file.file_name,
+                            "size": file.file_size
+                        })
+                    elif file.file_type == "secondary_image":
+                        media_data["secondary_images"].append({
+                            "id": file.id,
+                            "url": file.file.url,
+                            "name": file.file_name,
+                            "size": file.file_size
+                        })
+                    elif file.file_type == "primary_video":
+                        media_data["primary_videos"].append({
+                            "id": file.id,
+                            "url": file.file.url,
+                            "name": file.file_name,
+                            "size": file.file_size
+                        })
+                    elif file.file_type == "secondary_video":
+                        media_data["secondary_videos"].append({
+                            "id": file.id,
+                            "url": file.file.url,
+                            "name": file.file_name,
+                            "size": file.file_size
+                        })
 
-#         # Create or update contact details
-#         contact_details, created = ContactDetails.objects.get_or_create(
-#             form_session=form_session,
-#             defaults={
-#                 "op_contact_name": data.get("op_contact_name", ""),
-#                 "op_designation": data.get("op_designation", ""),
-#                 "op_email": data.get("op_email", ""),
-#                 "op_mobile": data.get("op_mobile", ""),
-#                 "owner_contact_name": data.get("owner_contact_name", ""),
-#                 "owner_designation": data.get("owner_designation", ""),
-#                 "owner_email": data.get("owner_email", ""),
-#                 "owner_mobile": data.get("owner_mobile", ""),
-#                 "billing_contact_name": data.get("billing_contact_name", ""),
-#                 "billing_designation": data.get("billing_designation", ""),
-#                 "billing_email": data.get("billing_email", ""),
-#                 "billing_mobile": data.get("billing_mobile", ""),
-#                 "is_completed": True,
-#             },
-#         )
+                data = {
+                    "video_links": gallery_details.video_links,
+                    "is_completed": gallery_details.is_completed,
+                    "media_files": media_data
+                }
 
-#         if not created:
-#             # Update existing record
-#             contact_details.op_contact_name = data.get(
-#                 "op_contact_name", contact_details.op_contact_name
-#             )
-#             contact_details.op_designation = data.get(
-#                 "op_designation", contact_details.op_designation
-#             )
-#             contact_details.op_email = data.get("op_email", contact_details.op_email)
-#             contact_details.op_mobile = data.get("op_mobile", contact_details.op_mobile)
-#             contact_details.owner_contact_name = data.get(
-#                 "owner_contact_name", contact_details.owner_contact_name
-#             )
-#             contact_details.owner_designation = data.get(
-#                 "owner_designation", contact_details.owner_designation
-#             )
-#             contact_details.owner_email = data.get(
-#                 "owner_email", contact_details.owner_email
-#             )
-#             contact_details.owner_mobile = data.get(
-#                 "owner_mobile", contact_details.owner_mobile
-#             )
-#             contact_details.billing_contact_name = data.get(
-#                 "billing_contact_name", contact_details.billing_contact_name
-#             )
-#             contact_details.billing_designation = data.get(
-#                 "billing_designation", contact_details.billing_designation
-#             )
-#             contact_details.billing_email = data.get(
-#                 "billing_email", contact_details.billing_email
-#             )
-#             contact_details.billing_mobile = data.get(
-#                 "billing_mobile", contact_details.billing_mobile
-#             )
-#             contact_details.is_completed = True
-#             contact_details.save()
+                return Response(
+                    {"success": True, "data": data}, status=status.HTTP_200_OK
+                )
 
-#         # Update session current step
-#         if form_session.current_step < 3:
-#             form_session.current_step = 3
-#             form_session.save()
+            except GalleryDetails.DoesNotExist:
+                return Response(
+                    {"success": True, "data": {}}, status=status.HTTP_200_OK
+                )
 
-#         return JsonResponse(
-#             {
-#                 "success": True,
-#                 "message": "Contact details saved successfully",
-#                 "next_step": 3,
-#             }
-#         )
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-#     except FormSession.DoesNotExist:
-#         return JsonResponse({"error": "Invalid session"}, status=404)
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=500)
+    def post(self, request, session_id):
+        """Save or update gallery details with file uploads"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
+            data = request.data
+            files = request.FILES
+
+            gallery_details, created = GalleryDetails.objects.get_or_create(
+                form_session=form_session,
+                defaults={
+                    "video_links": data.get("video_links", ""),
+                    "is_completed": True,
+                },
+            )
+
+            if not created:
+                gallery_details.video_links = data.get(
+                    "video_links", gallery_details.video_links
+                )
+                gallery_details.is_completed = True
+                gallery_details.save()
+
+
+            file_types = {
+                "primary_images": "primary_image",
+                "secondary_images": "secondary_image",
+                "primary_videos": "primary_video",
+                "secondary_videos": "secondary_video",
+            }
+
+            for field_name, file_type in file_types.items():
+                if field_name in files:
+                    file_list = files.getlist(field_name)
+                    for file in file_list:
+                        MediaFile.objects.create(
+                            gallery_details=gallery_details,
+                            file_type=file_type,
+                            file=file,
+                            file_name=file.name,
+                            file_size=file.size,
+                        )
+
+            if "deleted_files" in data:
+                for file_id in data["deleted_files"]:
+                    try:
+                        file = MediaFile.objects.get(id=file_id)
+                        file.file.delete()
+                        file.delete()
+                    except MediaFile.DoesNotExist:
+                        pass
+
+            if form_session.current_step < 4:
+                form_session.current_step = 4
+                form_session.save()
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Gallery details saved successfully",
+                    "next_step": 4,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        
+
+
+# -------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # @csrf_exempt
