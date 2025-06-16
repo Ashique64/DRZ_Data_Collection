@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import InitializeFormSessionView, SavePropertyDetailsView
+from .views import (
+    InitializeFormSessionView,
+    SavePropertyDetailsView,
+    SaveContactDetailsView,
+)
 
 urlpatterns = [
     path(
@@ -11,5 +15,10 @@ urlpatterns = [
         "property-details/<str:session_id>/",
         SavePropertyDetailsView.as_view(),
         name="save_property_details",
+    ),
+    path(
+        "save-contact-details/<str:session_id>/",
+        SaveContactDetailsView.as_view(),
+        name="save_contact_details",
     ),
 ]

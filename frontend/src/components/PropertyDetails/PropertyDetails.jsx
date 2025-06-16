@@ -20,7 +20,13 @@ import {
 } from "react-icons/lu";
 
 const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
-  const [formData, setFormData] = useState(initialData ||{
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  const [formData, setFormData] = useState({
     property_name: "",
     property_address: "",
     property_city: "",
@@ -35,12 +41,9 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     property_website: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
-
   const loadExistingData = async () => {
+    if (!sessionId) return;
+    
     setLoading(true);
     try {
       const response = await axios.get(
@@ -48,23 +51,43 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
       );
 
       if (response.data.success && response.data.data) {
-        setFormData((prevData) => ({
-          ...prevData,
-          ...response.data.data,
-        }));
+        // Only update form data if we actually have saved data
+        setFormData(response.data.data);
+        console.log("Loaded existing data:", response.data.data);
       }
     } catch (error) {
       console.error("Error loading existing data:", error);
+      // Don't clear form data on error - keep what user had entered
     } finally {
       setLoading(false);
+      setDataLoaded(true);
     }
   };
 
+  // Load initial data on component mount
   useEffect(() => {
-    if (sessionId) {
+    if (initialData && Object.keys(initialData).length > 0) {
+      // If initialData is provided, use it
+      setFormData(prevData => ({
+        ...prevData,
+        ...initialData,
+      }));
+      setDataLoaded(true);
+    } else if (sessionId && !dataLoaded) {
+      // Otherwise, try to load from server
       loadExistingData();
     }
-  }, [sessionId]);
+  }, [sessionId]); // Only depend on sessionId
+
+  // Handle initialData changes separately
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0 && !dataLoaded) {
+      setFormData(prevData => ({
+        ...prevData,
+        ...initialData,
+      }));
+    }
+  }, [initialData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -142,14 +165,18 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
       if (result.success) {
         if (showMessage) {
           setMessage("Property Information saved successfully!");
-          console.log(message);
+          console.log("Data saved successfully:", formData);
           setTimeout(() => setMessage(""), 3000);
         }
 
+        // Call onSave callback but don't modify formData
         if (onSave) {
           onSave("property", formData);
         }
 
+        // Ensure formData is preserved after save
+        console.log("Form data after save:", formData);
+        
         return true;
       } else {
         setMessage(result.error || "Failed to save property details");
@@ -167,9 +194,10 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const handleNext = async () => {
     const saved = await saveData(false);
     if (saved && onNext) {
+      // Navigate after a short delay to ensure state is preserved
       setTimeout(() => {
         onNext();
-      }, 2000);
+      }, 100);
     }
   };
 
@@ -197,6 +225,12 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
         <div className="title-section">
           <h3>Property Information / Business Information</h3>
         </div>
+
+        {message && (
+          <div className="alert alert-success alert-dismissible fade show" role="alert">
+            {message}
+          </div>
+        )}
 
         <div className="form-section">
           <div className="row first_row">

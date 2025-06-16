@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 import uuid, json
-from .models import FormSession, PropertyDetails
+from .models import FormSession, PropertyDetails, ContactDetails
 from email_management.models import FormToken
 
 
@@ -53,9 +53,55 @@ class InitializeFormSessionView(APIView):
 class SavePropertyDetailsView(APIView):
     permission_classes = [AllowAny]
 
+    def get(self, request, session_id):
+        """Fetch existing property details for a session"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
+
+            try:
+                property_details = PropertyDetails.objects.get(
+                    form_session=form_session
+                )
+
+                data = {
+                    "property_name": property_details.property_name,
+                    "property_address": property_details.property_address,
+                    "property_city": property_details.property_city,
+                    "property_state": property_details.property_state,
+                    "zip_code": property_details.zip_code,
+                    "property_country": property_details.property_country,
+                    "bill_to_company": property_details.bill_to_company,
+                    "gst_number": property_details.gst_number,
+                    "property_phone": property_details.property_phone,
+                    "reservation_phone": property_details.reservation_phone,
+                    "property_email": property_details.property_email,
+                    "property_website": property_details.property_website,
+                    "is_completed": property_details.is_completed,
+                }
+
+                return Response(
+                    {"success": True, "data": data}, status=status.HTTP_200_OK
+                )
+
+            except PropertyDetails.DoesNotExist:
+                return Response(
+                    {"success": True, "data": {}}, status=status.HTTP_200_OK
+                )
+
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
     def post(self, request, session_id):
         form_session = get_object_or_404(FormSession, session_id=session_id)
-        data = request.data 
+        data = request.data
 
         property_details, created = PropertyDetails.objects.get_or_create(
             form_session=form_session,
@@ -77,7 +123,7 @@ class SavePropertyDetailsView(APIView):
         )
 
         if not created:
-            
+
             for field in [
                 "property_name",
                 "property_address",
@@ -100,7 +146,6 @@ class SavePropertyDetailsView(APIView):
             property_details.is_completed = True
             property_details.save()
 
-       
         if form_session.current_step < 2:
             form_session.current_step = 2
             form_session.save()
@@ -114,24 +159,130 @@ class SavePropertyDetailsView(APIView):
             status=status.HTTP_200_OK,
         )
 
+# ---------------------------------------------------------------------------------------------
+
+class SaveContactDetailsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, session_id):
+        """Fetch existing contact details for a session"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
+
+            try:
+                contact_details = ContactDetails.objects.get(form_session=form_session)
+
+                data = {
+                    "op_contact_name": contact_details.op_contact_name,
+                    "op_designation": contact_details.op_designation,
+                    "op_email": contact_details.op_email,
+                    "op_mobile": contact_details.op_mobile,
+                    "owner_contact_name": contact_details.owner_contact_name,
+                    "owner_designation": contact_details.owner_designation,
+                    "owner_email": contact_details.owner_email,
+                    "owner_mobile": contact_details.owner_mobile,
+                    "billing_contact_name": contact_details.billing_contact_name,
+                    "billing_designation": contact_details.billing_designation,
+                    "billing_email": contact_details.billing_email,
+                    "billing_mobile": contact_details.billing_mobile,
+                    "is_completed": contact_details.is_completed,
+                }
+
+                return Response(
+                    {"success": True, "data": data}, status=status.HTTP_200_OK
+                )
+
+            except ContactDetails.DoesNotExist:
+                return Response(
+                    {"success": True, "data": {}}, status=status.HTTP_200_OK
+                )
+
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    def post(self, request, session_id):
+        """Save or update contact details (Page 2)"""
+        try:
+            form_session = get_object_or_404(FormSession, session_id=session_id)
+            data = request.data
+
+            contact_details, created = ContactDetails.objects.get_or_create(
+                form_session=form_session,
+                defaults={
+                    "op_contact_name": data.get("op_contact_name", ""),
+                    "op_designation": data.get("op_designation", ""),
+                    "op_email": data.get("op_email", ""),
+                    "op_mobile": data.get("op_mobile", ""),
+                    "owner_contact_name": data.get("owner_contact_name", ""),
+                    "owner_designation": data.get("owner_designation", ""),
+                    "owner_email": data.get("owner_email", ""),
+                    "owner_mobile": data.get("owner_mobile", ""),
+                    "billing_contact_name": data.get("billing_contact_name", ""),
+                    "billing_designation": data.get("billing_designation", ""),
+                    "billing_email": data.get("billing_email", ""),
+                    "billing_mobile": data.get("billing_mobile", ""),
+                    "is_completed": True,
+                },
+            )
+
+            if not created:
+                for field in [
+                    "op_contact_name",
+                    "op_designation",
+                    "op_email",
+                    "op_mobile",
+                    "owner_contact_name",
+                    "owner_designation",
+                    "owner_email",
+                    "owner_mobile",
+                    "billing_contact_name",
+                    "billing_designation",
+                    "billing_email",
+                    "billing_mobile",
+                ]:
+                    setattr(
+                        contact_details,
+                        field,
+                        data.get(field, getattr(contact_details, field)),
+                    )
+                contact_details.is_completed = True
+                contact_details.save()
+
+            if form_session.current_step < 3:
+                form_session.current_step = 3
+                form_session.save()
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Contact details saved successfully",
+                    "next_step": 3,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except FormSession.DoesNotExist:
+            return Response(
+                {"error": "Invalid session ID"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# ---------------------------------------------------------------------------------------------
 
 
 # @csrf_exempt
