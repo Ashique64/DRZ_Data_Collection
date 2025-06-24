@@ -19,50 +19,37 @@ const Login = () => {
     }
   }, [navigate]);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("isLoggedIn");
-  //   navigate("/login", { replace: true });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${BaseURL}/api/auth/login/`,
-        {
-          username,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${BaseURL}/api/auth/login/`, {
+        username,
+        password,
+      });
 
       if (response.status === 200) {
+        const { access, refresh, username: responseUsername } = response.data;
+        
+        localStorage.setItem("accessToken", access);
+        localStorage.setItem("refreshToken", refresh);
         localStorage.setItem("isLoggedIn", "true");
-        setTimeout(() => {
-          navigate("/home", { replace: true });
-        }, 2000);
-      } else {
-        setError("Something went wrong. Please try again.");
+        localStorage.setItem("username", responseUsername);
+
+        navigate("/home", { replace: true });
       }
     } catch (err) {
-      if (err.response && err.response.status === 403) {
+      if (err.response?.status === 403) {
         setError("Access denied! Only superusers can log in.");
+      } else if (err.response?.status === 401) {
+        setError("Invalid username or password.");
       } else {
-        setTimeout(() => {
-          setError("Invalid credentials or server error.");
-        }, 2000);
+        setError("Login failed. Please try again.");
       }
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+      setLoading(false);
     }
   };
 
@@ -86,6 +73,7 @@ const Login = () => {
               name="username"
               placeholder="Username"
               required
+              disabled={loading}
             />
             <input
               type="password"
@@ -95,8 +83,13 @@ const Login = () => {
               name="password"
               placeholder="Password"
               required
+              disabled={loading}
             />
-            <button className="form-control" type="submit" disabled={loading}>
+            <button 
+              className="form-control" 
+              type="submit" 
+              disabled={loading || !username.trim() || !password.trim()}
+            >
               {loading ? (
                 <div className="spinner-container">
                   <span className="spinner"></span>

@@ -1,7 +1,17 @@
-import React from 'react'
-import './NavBar.scss'
+import React from "react";
+import "./NavBar.scss";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    navigate("/", { replace: true });
+    window.location.reload();
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
       <div className="container">
@@ -21,7 +31,10 @@ const NavBar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse justify-content-center" id="navMenu">
+        <div
+          className="collapse navbar-collapse justify-content-center"
+          id="navMenu"
+        >
           <ul className="navbar-nav mx-auto">
             <li className="nav-item">
               <a className="nav-link" href="#">
@@ -40,14 +53,13 @@ const NavBar = () => {
             </li>
           </ul>
 
-          {/* Right Side Logout */}
-          <button className="btn btn-outline-light logout-btn ms-lg-3">
+          <button onClick={handleLogout} className="btn btn-outline-light logout-btn ms-lg-3">
             Logout
           </button>
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;

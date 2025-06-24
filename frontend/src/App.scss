@@ -1,13 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
 :root {
   --primary-color: #fcfcfc;
   --primary-dark: #171242;
   --primary-gradient: linear-gradient(to bottom, #0f0d27, #1b1747, #2c2474);
   --title-color: #573b8a;
   --primary-font: "Zilla Slab", serif;
-
---secondary-color: #6A5ACD;
-// --accent-color: #7F00FF;
---accent-color: #B57EDC;
-
+  --secondary-font: "Ubuntu", sans-serif;
+  --secondary-color: #17124286;
+  --accent-color: #b57edc;
+  --accent-color-2: #4f46e5;
+  --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --para-color:#babec5;
+  --form-color: #3182ce;
+  // --accent-color: #7F00FF;
 }

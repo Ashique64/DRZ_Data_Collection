@@ -1,0 +1,32 @@
+.access-denied-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 20px;
+    width: 100%;
+
+    .access-denied-item {
+        background-color: rgba(125, 130, 206, 0.068);
+        border-radius: 8px;
+        padding: 40px;
+        max-width: 500px;
+        overflow: hidden;
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: var(--para-color);
+            line-height: 1.5;
+            margin: 0;
+        }
+    }
+}

@@ -21,7 +21,7 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('authentications.urls')),
-    # path('api/email/', include('email_management.urls')),
-    # path('api/client-data/', include('client_data.urls')),
+    path('api/email/', include('email_management.urls')),
+    path('api/data/', include('form_submission.urls')),
     
 ]
