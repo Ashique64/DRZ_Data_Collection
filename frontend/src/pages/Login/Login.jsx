@@ -14,8 +14,15 @@ const Login = () => {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn");
+    const role = localStorage.getItem("role");
+
     if (loggedIn === "true") {
-      navigate("/home", { replace: true });
+      if (role == "admin") {
+        // window.location.href = `${BaseURL}/admin`;
+        navigate("/home", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
     }
   }, [navigate]);
 
@@ -31,19 +38,28 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        const { access, refresh, username: responseUsername } = response.data;
-        
+        const {
+          access,
+          refresh,
+          username: responseUsername,
+          role,
+        } = response.data;
+
         localStorage.setItem("accessToken", access);
         localStorage.setItem("refreshToken", refresh);
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("username", responseUsername);
+        localStorage.setItem("role", role);
 
-        navigate("/home", { replace: true });
+        if (role === "admin") {
+          // window.location.href = `${BaseURL}/admin`;
+          navigate("/home", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
       }
     } catch (err) {
-      if (err.response?.status === 403) {
-        setError("Access denied! Only superusers can log in.");
-      } else if (err.response?.status === 401) {
+      if (err.response?.status === 401) {
         setError("Invalid username or password.");
       } else {
         setError("Login failed. Please try again.");
@@ -85,9 +101,9 @@ const Login = () => {
               required
               disabled={loading}
             />
-            <button 
-              className="form-control" 
-              type="submit" 
+            <button
+              className="form-control"
+              type="submit"
               disabled={loading || !username.trim() || !password.trim()}
             >
               {loading ? (
