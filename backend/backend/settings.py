@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "authentications",
-    "email_management",
-    'form_submission',
+    # "email_management",
+    # 'form_submission',
 ]
 
 REST_FRAMEWORK = {
@@ -111,6 +111,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
+
+AUTH_USER_MODEL = 'authentications.User'
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -142,6 +146,7 @@ USE_I18N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -169,7 +174,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = config("EMAIL_HOST_USER")
 
 
-FRONTEND_URL = config("FRONTEND_URL")
+# FRONTEND_URL = config("FRONTEND_URL")
 
 from datetime import timedelta
 SIMPLE_JWT = {
