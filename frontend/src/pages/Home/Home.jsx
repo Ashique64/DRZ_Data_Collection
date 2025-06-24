@@ -14,6 +14,8 @@ const Home = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [messageType, setMessageType] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
+  const [categories, setCategories] = useState([]);
 
   const navigate = useNavigate();
 
@@ -43,8 +45,10 @@ const Home = () => {
     try {
       const response = await axios.post(
         `${BaseURL}/api/email/send-invitation/`,
-        { email: clientEmail },
-        { name: clientName },
+        {
+          email: clientEmail,
+          name: clientName,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -95,6 +99,26 @@ const Home = () => {
   };
 
   useAutoLogout();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await axios.get(`${BaseURL}/api/email/categories/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
@@ -124,6 +148,21 @@ const Home = () => {
           <div className="row sent-mail-row">
             <div className="col-md-12 sent-mail-col">
               <div className="row mail-items-row">
+                <div className="col-md-6 col-lg-2 col_1">
+                  <select
+                    className="form-control custom-select"
+                    value={selectedOption}
+                    onChange={(e) => setSelectedOption(e.target.value)}
+                  >
+                    <option value="" disabled>Select a category</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="custom-arrow"></span>
+                </div>
                 <div className="col-md-6 col-lg-3 col_1">
                   <input
                     className="form-control"
@@ -134,7 +173,7 @@ const Home = () => {
                     required
                   />
                 </div>
-                <div className="col-md-6 col-lg-6 col_1">
+                <div className="col-md-6 col-lg-4 col_1">
                   <input
                     className="form-control"
                     type="email"

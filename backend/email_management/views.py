@@ -1,22 +1,26 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 import secrets
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import FormToken
+from .models import FormToken, Categories
+from .serializers import CategorySerializer
 from django.shortcuts import get_object_or_404
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class SendFormLinkView(APIView):
-    permission_classes = [IsAuthenticated]  # Requires authentication
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def post(self, request, *args, **kwargs):
         try:
             client_email = request.data.get("email")
+            client_name = request.data.get("name")
 
-            if not client_email or "@" not in client_email:
+            if not client_name or not client_email or "@" not in client_email:
                 return Response(
                     {"error": "Please enter a valid email address"},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -27,11 +31,12 @@ class SendFormLinkView(APIView):
             form_token = FormToken.objects.create(
                 token=token,
                 client_email=client_email,
+                client_name=client_name,
             )
 
             form_url = f"{settings.FRONTEND_URL}/form/{token}/"
             email_body = f"""
-                <p>Hello,</p>
+                <p>Hello, "{client_name}"</p>
                 <p>Please fill out the form using the following link:</p>
                 <p><a href="{form_url}">{form_url}</a></p>
                 <p>This link will expire in 7 days.</p>
@@ -97,3 +102,10 @@ class VerifyTokenView(APIView):
                 {"valid": False, "message": "Invalid token"},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+class CategoryList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    queryset = Categories.objects.all()
+    serializer_class = CategorySerializer
