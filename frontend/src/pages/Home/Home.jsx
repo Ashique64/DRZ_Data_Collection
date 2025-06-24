@@ -10,6 +10,7 @@ import useAutoLogout from "../../components/useAutoLogout";
 
 const Home = () => {
   const [clientEmail, setClientEmail] = useState("");
+  const [clientName, setClientName] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [messageType, setMessageType] = useState("");
@@ -43,6 +44,7 @@ const Home = () => {
       const response = await axios.post(
         `${BaseURL}/api/email/send-invitation/`,
         { email: clientEmail },
+        { name: clientName },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,6 +56,7 @@ const Home = () => {
       setMessage(response.data.message || "Invitation sent successfully!");
       setMessageType("success");
       setClientEmail("");
+      setClientName("");
     } catch (error) {
       console.error("Email send error:", error);
 
@@ -121,7 +124,17 @@ const Home = () => {
           <div className="row sent-mail-row">
             <div className="col-md-12 sent-mail-col">
               <div className="row mail-items-row">
-                <div className="col-md-6 col-lg-8 col_1">
+                <div className="col-md-6 col-lg-3 col_1">
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Enter Your Client Name"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="col-md-6 col-lg-6 col_1">
                   <input
                     className="form-control"
                     type="email"

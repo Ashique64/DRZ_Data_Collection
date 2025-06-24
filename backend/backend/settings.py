@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "authentications",
-    # "email_management",
+    "email_management",
     # 'form_submission',
 ]
 
