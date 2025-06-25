@@ -286,6 +286,28 @@
                               ) !important;
                             }
                           }
+                          select {
+                            border: none;
+                            outline: none;
+                            border-bottom: 1px solid var(--accent-color);
+                            background: transparent;
+                            width: 100%;
+                            color: var(--form-color);
+                            padding: 10px;
+
+                            &:-webkit-autofill {
+                              -webkit-text-fill-color: var(
+                                --form-color
+                              ) !important;
+                              transition: background-color 5000s ease-in-out 0s;
+                            }
+
+                            &:-webkit-autofill:focus {
+                              -webkit-text-fill-color: var(
+                                --form-color
+                              ) !important;
+                            }
+                          }
                           textarea {
                             border: none;
                             outline: none;

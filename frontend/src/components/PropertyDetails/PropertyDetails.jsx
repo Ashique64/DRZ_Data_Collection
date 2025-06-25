@@ -17,6 +17,16 @@ import {
   LuLoader,
   LuSave,
   LuArrowRight,
+  LuEuro,
+  LuCoins,
+  LuHandCoins,
+  LuBed,
+  LuHotel,
+  LuStar,
+  LuTags,
+  LuListTree,
+  LuCompass,
+  LuInfo,
 } from "react-icons/lu";
 
 const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
@@ -25,6 +35,68 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
+
+  const currencyOptions = [
+    "AED",
+    "AUD",
+    "BDT",
+    "CAD",
+    "CHF",
+    "CNY",
+    "DKK",
+    "EUR",
+    "GBP",
+    "HKD",
+    "INR",
+    "JPY",
+    "KRW",
+    "MYR",
+    "NOK",
+    "NZD",
+    "PKR",
+    "RUB",
+    "SAR",
+    "SEK",
+    "SGD",
+    "THB",
+    "TRY",
+    "TWD",
+    "USD",
+    "ZAR",
+  ];
+  const propertyType = ["Hotel", "Restaurant", "Both"];
+  const propertyCategory = [
+    "Business apartments",
+    "Business hotels",
+    "Chalets",
+    "Country houses",
+    "Cruises",
+    "Economy hotels",
+    "Farm stays",
+    "Gites",
+    "Guest houses",
+    "Holiday homes",
+    "Holiday parks",
+    "Homestays",
+    "Hostels",
+    "Hotels",
+    "Lodges",
+    "Love hotels",
+    "Luxury tents",
+    "Motelss",
+    "Resorts",
+    "Riads",
+    "Ryokans",
+    "Student accommodation",
+    "Villas",
+  ];
+  const starCategory = [
+    "1 star",
+    "2 stars",
+    "3 stars",
+    "4 stars",
+    "5 stars & above",
+  ];
 
   const [formData, setFormData] = useState({
     property_name: "",
@@ -39,11 +111,19 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     reservation_phone: "",
     property_email: "",
     property_website: "",
+    base_currency: "",
+    no_of_rooms: "",
+    property_type: "",
+    property_category: "",
+    star_category: "",
+    latitude: "",
+    longitude: "",
+    additional_info: "",
   });
 
   const loadExistingData = async () => {
     if (!sessionId) return;
-    
+
     // setLoading(true);
     try {
       const response = await axios.get(
@@ -61,10 +141,9 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     }
   };
 
- 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         ...initialData,
       }));
@@ -74,10 +153,9 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     }
   }, [sessionId]);
 
-
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0 && !dataLoaded) {
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
         ...initialData,
       }));
@@ -114,9 +192,54 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     if (!formData.property_city.trim()) {
       newErrors.property_city = "Property city is required";
     }
+    if (!formData.property_state.trim()) {
+      newErrors.property_state = "Property State is required";
+    }
+    if (!formData.zip_code.trim()) {
+      newErrors.zip_code = "Pin Code is required";
+    }
+    if (!formData.property_country.trim()) {
+      newErrors.property_country = "Property Country is required";
+    }
+    if (!formData.bill_to_company.trim()) {
+      newErrors.bill_to_company = "Required";
+    }
+    if (!formData.gst_number.trim()) {
+      newErrors.gst_number = "Required";
+    }
 
     if (!formData.property_phone.trim()) {
       newErrors.property_phone = "Property phone is required";
+    }
+    if (!formData.reservation_phone.trim()) {
+      newErrors.reservation_phone = "Reservation phone is required";
+    }
+    if (!formData.property_email.trim()) {
+      newErrors.property_email = "Email is required";
+    }
+    if (!formData.property_website.trim()) {
+      newErrors.property_website = "URL is required";
+    }
+    if (!formData.base_currency.trim()) {
+      newErrors.base_currency = "Required";
+    }
+    if (!formData.no_of_rooms.trim()) {
+      newErrors.no_of_rooms = "Required";
+    }
+    if (!formData.property_type.trim()) {
+      newErrors.property_type = "Property Type Required";
+    }
+    if (!formData.property_category.trim()) {
+      newErrors.property_category = "Property Category Required";
+    }
+    if (!formData.star_category.trim()) {
+      newErrors.star_category = "Required";
+    }
+    if (!formData.latitude.trim()) {
+      newErrors.latitude = "Latitude Required";
+    }
+    if (!formData.longitude.trim()) {
+      newErrors.longitude = "Longittude Required";
     }
 
     if (
@@ -164,11 +287,10 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
           setTimeout(() => setMessage(""), 3000);
         }
 
-        
         if (onSave) {
           onSave("property", formData);
         }
-        
+
         return true;
       } else {
         setMessage(result.error || "Failed to save property details");
@@ -218,7 +340,10 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
         </div>
 
         {message && (
-          <div className="alert alert-success alert-dismissible fade show" role="alert">
+          <div
+            className="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
             {message}
           </div>
         )}
@@ -508,6 +633,230 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
               </div>
             </div>
           </div>
+
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="base_currency">Base Currency</label>
+                <div className="input_items">
+                  <span>
+                    <LuHandCoins />
+                  </span>
+                  <select
+                    name="base_currency"
+                    id="base_currency"
+                    value={formData.base_currency}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Select Currency
+                    </option>
+                    {currencyOptions.map((currency) => (
+                      <option key={currency} value={currency}>
+                        {currency}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.base_currency && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.base_currency}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="no_of_rooms">
+                  Total number of rooms in property
+                </label>
+                <div className="input_items">
+                  <span>
+                    <LuBed />
+                  </span>
+                  <input
+                    type="text"
+                    name="no_of_rooms"
+                    id="no_of_rooms"
+                    value={formData.no_of_rooms}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                {errors.no_of_rooms && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.no_of_rooms}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-4 item">
+              <div className="input_wrapper">
+                <label htmlFor="property_type">Property Type</label>
+                <div className="input_items">
+                  <span>
+                    <LuListTree />
+                  </span>
+                  <select
+                    name="property_type"
+                    id="property_type"
+                    value={formData.property_type}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Select Property Type
+                    </option>
+                    {propertyType.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.property_type && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.property_type}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-4 item">
+              <div className="input_wrapper">
+                <label htmlFor="property_category">Property Category</label>
+                <div className="input_items">
+                  <span>
+                    <LuTags />
+                  </span>
+                  <select
+                    name="property_category"
+                    id="property_category"
+                    value={formData.property_category}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Select Property Category
+                    </option>
+                    {propertyCategory.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.property_category && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.property_category}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-4 item">
+              <div className="input_wrapper">
+                <label htmlFor="star_category">Star Category</label>
+                <div className="input_items">
+                  <span>
+                    <LuStar />
+                  </span>
+                  <select
+                    name="star_category"
+                    id="star_category"
+                    value={formData.star_category}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Select Star Category
+                    </option>
+                    {starCategory.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.star_category && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.star_category}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="latitude">Latitude</label>
+                <div className="input_items">
+                  <span>
+                    <LuCompass />
+                  </span>
+                  <input
+                    type="text"
+                    name="latitude"
+                    id="latitude"
+                    value={formData.latitude}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                {errors.latitude && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.latitude}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label htmlFor="longitude">Longitude</label>
+                <div className="input_items">
+                  <span>
+                    <LuMapPin />
+                  </span>
+                  <input
+                    type="text"
+                    name="longitude"
+                    id="longitude"
+                    value={formData.longitude}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                {errors.longitude && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.longitude}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="row first_row">
+            <div className="col-md-12 item">
+              <div className="input_wrapper">
+                <label htmlFor="additional_info">
+                  If you want to provide additional information...
+                </label>
+                <div className="input_items">
+                  <span>
+                    <LuInfo />
+                  </span>
+                  <textarea
+                    name="additional_info"
+                    id="additional_info"
+                    value={formData.additional_info}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                {errors.additional_info && (
+                  <div className="invalid-feedback d-block ms-4">
+                    {errors.additional_info}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* --------------------------- */}
           <div className="save-btn">
             <button
               onClick={handleNext}
