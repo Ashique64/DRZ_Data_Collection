@@ -1,51 +1,27 @@
-# from django.db import models
-# from email_management.models import FormToken
+from django.db import models
+from email_management.models import FormToken, Categories
 
-# # Create your models here.
-
-
-# class FormSession(models.Model):
-#     """Master session to track multi-page form progress"""
-
-#     form_token = models.OneToOneField(
-#         FormToken, on_delete=models.CASCADE, related_name="form_session"
-#     )
-#     session_id = models.CharField(max_length=100, unique=True)
-#     is_completed = models.BooleanField(default=False)
-#     current_step = models.IntegerField(default=1)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-
-#     def __str__(self):
-#         return f"Session {self.session_id} - {self.form_token.client_email}"
+# Create your models here.
 
 
-# class PropertyDetails(models.Model):
-#     """Page 1: Property Information"""
+class FormSession(models.Model):
+    """Master session to track multi-page form progress"""
 
-#     form_session = models.OneToOneField(
-#         FormSession, on_delete=models.CASCADE, related_name="property_details"
-#     )
+    form_token = models.OneToOneField(
+        FormToken, on_delete=models.CASCADE, related_name="form_session"
+    )
+    session_id = models.CharField(max_length=100, unique=True)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name="form_session_category")
+    is_completed = models.BooleanField(default=False)
+    current_step = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-#     property_name = models.CharField(max_length=255, null=True, blank=True)
-#     property_address = models.TextField(null=True, blank=True)
-#     property_city = models.CharField(max_length=100, null=True, blank=True)
-#     property_state = models.CharField(max_length=100, null=True, blank=True)
-#     zip_code = models.CharField(max_length=20, null=True, blank=True)
-#     property_country = models.CharField(max_length=100, null=True, blank=True)
-#     bill_to_company = models.CharField(max_length=255, blank=True, null=True)
-#     gst_number = models.CharField(max_length=50, blank=True, null=True)
-#     property_phone = models.CharField(max_length=20, null=True, blank=True)
-#     reservation_phone = models.CharField(max_length=20, blank=True, null=True)
-#     property_email = models.EmailField(null=True, blank=True)
-#     property_website = models.URLField(blank=True, null=True)
+    def __str__(self):
+        return f"Session {self.session_id} - {self.form_token.client_email}"
 
-#     is_completed = models.BooleanField(default=False)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
 
-#     def __str__(self):
-#         return f"Property Details - {self.property_name}"
+
 
 
 # class ContactDetails(models.Model):

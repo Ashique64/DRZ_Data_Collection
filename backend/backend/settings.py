@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "authentications",
     "email_management",
-    # 'form_submission',
+    'form_submission',
+    'property_details',
 ]
 
 REST_FRAMEWORK = {

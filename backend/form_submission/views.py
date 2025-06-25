@@ -1,164 +1,58 @@
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework.permissions import AllowAny
-# from django.shortcuts import get_object_or_404
-# import uuid, json
-# from .models import FormSession, PropertyDetails, ContactDetails, GalleryDetails, MediaFile, WebsiteDetails
-# from email_management.models import FormToken
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from django.shortcuts import get_object_or_404
+import uuid, json
+from .models import FormSession
+from email_management.models import FormToken
 # from django.core.exceptions import ValidationError
 
 
-# class InitializeFormSessionView(APIView):
-#     permission_classes = [AllowAny]
+class InitializeFormSessionView(APIView):
+    permission_classes = [AllowAny]
 
-#     def post(self, request, token):
-#         form_token = get_object_or_404(FormToken, token=token)
+    def post(self, request, token):
+        form_token = get_object_or_404(FormToken, token=token)
 
-#         if not form_token.is_valid():
-#             return Response(
-#                 {"error": "Token has expired or already been used"},
-#                 status=status.HTTP_400_BAD_REQUEST,
-#             )
+        if not form_token.is_valid():
+            return Response(
+                {"error": "Token has expired or already been used"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-#         existing_session = FormSession.objects.filter(form_token=form_token).first()
-#         if existing_session:
-#             return Response(
-#                 {
-#                     "success": True,
-#                     "session_id": existing_session.session_id,
-#                     "current_step": existing_session.current_step,
-#                     "message": "Session already exists",
-#                 },
-#                 status=status.HTTP_200_OK,
-#             )
+        existing_session = FormSession.objects.filter(form_token=form_token).first()
+        if existing_session:
+            return Response(
+                {
+                    "success": True,
+                    "session_id": existing_session.session_id,
+                    "current_step": existing_session.current_step,
+                    "message": "Session already exists",
+                },
+                status=status.HTTP_200_OK,
+            )
 
-#         session_id = str(uuid.uuid4())
-#         FormSession.objects.create(
-#             form_token=form_token,
-#             session_id=session_id,
-#             current_step=1,
-#         )
+        session_id = str(uuid.uuid4())
+        FormSession.objects.create(
+            form_token=form_token,
+            session_id=session_id,
+            current_step=1,
+            category=form_token.category
+        )
 
-#         return Response(
-#             {
-#                 "success": True,
-#                 "session_id": session_id,
-#                 "current_step": 1,
-#                 "message": "Form session initialized",
-#             },
-#             status=status.HTTP_201_CREATED,
-#         )
+        return Response(
+            {
+                "success": True,
+                "session_id": session_id,
+                "current_step": 1,
+                "message": "Form session initialized",
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 
-# class SavePropertyDetailsView(APIView):
-#     permission_classes = [AllowAny]
 
-#     def get(self, request, session_id):
-#         """Fetch existing property details for a session"""
-#         try:
-#             form_session = get_object_or_404(FormSession, session_id=session_id)
-
-#             try:
-#                 property_details = PropertyDetails.objects.get(
-#                     form_session=form_session
-#                 )
-
-#                 data = {
-#                     "property_name": property_details.property_name,
-#                     "property_address": property_details.property_address,
-#                     "property_city": property_details.property_city,
-#                     "property_state": property_details.property_state,
-#                     "zip_code": property_details.zip_code,
-#                     "property_country": property_details.property_country,
-#                     "bill_to_company": property_details.bill_to_company,
-#                     "gst_number": property_details.gst_number,
-#                     "property_phone": property_details.property_phone,
-#                     "reservation_phone": property_details.reservation_phone,
-#                     "property_email": property_details.property_email,
-#                     "property_website": property_details.property_website,
-#                     "is_completed": property_details.is_completed,
-#                 }
-
-#                 return Response(
-#                     {"success": True, "data": data}, status=status.HTTP_200_OK
-#                 )
-
-#             except PropertyDetails.DoesNotExist:
-#                 return Response(
-#                     {"success": True, "data": {}}, status=status.HTTP_200_OK
-#                 )
-
-#         except FormSession.DoesNotExist:
-#             return Response(
-#                 {"error": "Invalid session ID"},
-#                 status=status.HTTP_404_NOT_FOUND,
-#             )
-#         except Exception as e:
-#             return Response(
-#                 {"error": str(e)},
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             )
-
-#     def post(self, request, session_id):
-#         form_session = get_object_or_404(FormSession, session_id=session_id)
-#         data = request.data
-
-#         property_details, created = PropertyDetails.objects.get_or_create(
-#             form_session=form_session,
-#             defaults={
-#                 "property_name": data.get("property_name", ""),
-#                 "property_address": data.get("property_address", ""),
-#                 "property_city": data.get("property_city", ""),
-#                 "property_state": data.get("property_state", ""),
-#                 "zip_code": data.get("zip_code", ""),
-#                 "property_country": data.get("property_country", ""),
-#                 "bill_to_company": data.get("bill_to_company", ""),
-#                 "gst_number": data.get("gst_number", ""),
-#                 "property_phone": data.get("property_phone", ""),
-#                 "reservation_phone": data.get("reservation_phone", ""),
-#                 "property_email": data.get("property_email", ""),
-#                 "property_website": data.get("property_website", ""),
-#                 "is_completed": True,
-#             },
-#         )
-
-#         if not created:
-
-#             for field in [
-#                 "property_name",
-#                 "property_address",
-#                 "property_city",
-#                 "property_state",
-#                 "zip_code",
-#                 "property_country",
-#                 "bill_to_company",
-#                 "gst_number",
-#                 "property_phone",
-#                 "reservation_phone",
-#                 "property_email",
-#                 "property_website",
-#             ]:
-#                 setattr(
-#                     property_details,
-#                     field,
-#                     data.get(field, getattr(property_details, field)),
-#                 )
-#             property_details.is_completed = True
-#             property_details.save()
-
-#         if form_session.current_step < 2:
-#             form_session.current_step = 2
-#             form_session.save()
-
-#         return Response(
-#             {
-#                 "success": True,
-#                 "message": "Property details saved successfully",
-#                 "next_step": 2,
-#             },
-#             status=status.HTTP_200_OK,
-#         )
 
 # # ---------------------------------------------------------------------------------------------
 

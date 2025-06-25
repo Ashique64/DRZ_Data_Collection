@@ -15,13 +15,9 @@ import {
   LuPhoneCall,
   LuPhone,
   LuLoader,
-  LuSave,
   LuArrowRight,
-  LuEuro,
-  LuCoins,
   LuHandCoins,
   LuBed,
-  LuHotel,
   LuStar,
   LuTags,
   LuListTree,
@@ -127,7 +123,7 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     // setLoading(true);
     try {
       const response = await axios.get(
-        `${BaseURL}/api/data/property-details/${sessionId}/`
+        `${BaseURL}/api/property/property-details/${sessionId}/`
       );
 
       if (response.data.success && response.data.data) {
@@ -269,7 +265,7 @@ const PropertyDetails = ({ sessionId, onNext, onSave, initialData }) => {
     setSaving(true);
     try {
       const response = await axios.post(
-        `${BaseURL}/api/data/property-details/${sessionId}/`,
+        `${BaseURL}/api/property/property-details/${sessionId}/`,
         formData,
         {
           headers: {
