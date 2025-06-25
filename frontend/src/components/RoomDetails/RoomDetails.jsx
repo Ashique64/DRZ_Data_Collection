@@ -9,9 +9,15 @@ import {
   LuArrowRight,
   LuLoader,
   LuInfo,
+  LuHouse,
+  LuUsers,
+  LuCoins,
+  LuNotebook,
+  LuNotepadText,
+  LuLink,
 } from "react-icons/lu";
 
-const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
+const RoomDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
@@ -33,6 +39,27 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
     billing_mobile: "",
     additional_info: "",
   });
+
+  const roomTypes = [
+    "Standard",
+    "Deluxe",
+    "Superior",
+    "Presidential",
+    "Family",
+    "Suite",
+    "Single",
+    "Double",
+    "Twin",
+    "Twin/Double",
+    "Triple",
+    "Quadruple",
+    "Studio",
+    "Apartment",
+    "Dormitory room",
+    "Bed in Dormitory",
+    "Mixed Dorm",
+    "Female Dorm",
+  ];
 
   const loadExistingData = async () => {
     if (!sessionId) return;
@@ -131,7 +158,8 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
     // Validate billing contacts if provided
     if (!formData.billing_contact_name.trim()) {
-      newErrors.billing_contact_name = "Billing contact person name is required";
+      newErrors.billing_contact_name =
+        "Billing contact person name is required";
     }
 
     if (!formData.billing_email.trim()) {
@@ -220,12 +248,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
       </div>
     );
   }
-
   return (
     <div className="tab-panel">
       <div className="row details-row">
         <div className="title-section">
-          <h3>Contact Informations</h3>
+          <h3>Rooms Details</h3>
         </div>
 
         {message && (
@@ -236,139 +263,53 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
         <div className="form-section">
           <div className="row first_row">
-            <h4 className="mb-5">Operational / Support Related Matters</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="op_contact_name">Contact Person Name</label>
+                <label htmlFor="room_type">Room Type Name</label>
                 <div className="input_items">
                   <span>
-                    <LuUser />
+                    <LuHouse />
                   </span>
-                  <input
-                    type="text"
-                    name="op_contact_name"
-                    value={formData.op_contact_name}
+                  <select
+                    name="room_type"
+                    id="room_type"
+                    value={formData.room_type}
                     onChange={handleInputChange}
-                    className={errors.op_contact_name ? "is-invalid" : ""}
-                  />
+                  >
+                    <option value="" disabled>
+                      Select Room Type
+                    </option>
+                    {roomTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                {errors.op_contact_name && (
+                {errors.room_type && (
                   <div className="invalid-feedback d-block">
-                    {errors.op_contact_name}
+                    {errors.room_type}
                   </div>
                 )}
               </div>
             </div>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="op_designation">Designation</label>
+                <label htmlFor="occupancy">Max Occupancy</label>
                 <div className="input_items">
                   <span>
-                    <LuBadgeInfo />
+                    <LuUsers />
                   </span>
                   <input
                     type="text"
-                    name="op_designation"
-                    value={formData.op_designation}
+                    name="occupancy"
+                    value={formData.occupancy}
                     onChange={handleInputChange}
                   />
                 </div>
-                {errors.op_designation && (
+                {errors.occupancy && (
                   <div className="invalid-feedback d-block">
-                    {errors.op_designation}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="row first_row">
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="op_email">Email Address</label>
-                <div className="input_items">
-                  <span>
-                    <LuMail />
-                  </span>
-                  <input
-                    type="text"
-                    name="op_email"
-                    value={formData.op_email}
-                    onChange={handleInputChange}
-                    className={errors.op_email ? "is-invalid" : ""}
-                  />
-                </div>
-                {errors.op_email && (
-                  <div className="invalid-feedback d-block">
-                    {errors.op_email}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="op_mobile">Mobile Number</label>
-                <div className="input_items">
-                  <span>
-                    <LuPhoneCall />
-                  </span>
-                  <input
-                    type="text"
-                    name="op_mobile"
-                    value={formData.op_mobile}
-                    onChange={handleInputChange}
-                    className={errors.op_mobile ? "is-invalid" : ""}
-                  />
-                </div>
-                {errors.op_mobile && (
-                  <div className="invalid-feedback d-block">
-                    {errors.op_mobile}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="row first_row">
-            <h4 className="my-5">Property Owner / Manager</h4>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="owner_contact_name">Contact Person Name</label>
-                <div className="input_items">
-                  <span>
-                    <LuUser />
-                  </span>
-                  <input
-                    type="text"
-                    name="owner_contact_name"
-                    value={formData.owner_contact_name}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.owner_contact_name && (
-                  <div className="invalid-feedback d-block">
-                    {errors.owner_contact_name}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="owner_designation">Designation</label>
-                <div className="input_items">
-                  <span>
-                    <LuBadgeInfo />
-                  </span>
-                  <input
-                    type="text"
-                    name="owner_designation"
-                    value={formData.owner_designation}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.owner_designation && (
-                  <div className="invalid-feedback d-block">
-                    {errors.owner_designation}
+                    {errors.occupancy}
                   </div>
                 )}
               </div>
@@ -378,91 +319,45 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
           <div className="row first_row">
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="owner_email">Email Address</label>
+                <label htmlFor="room_price">Room Price</label>
                 <div className="input_items">
                   <span>
-                    <LuMail />
+                    <LuCoins />
                   </span>
                   <input
                     type="text"
-                    name="owner_email"
-                    value={formData.owner_email}
+                    name="room_price"
+                    value={formData.room_price}
                     onChange={handleInputChange}
-                    className={errors.owner_email ? "is-invalid" : ""}
+                    className={errors.room_price ? "is-invalid" : ""}
                   />
                 </div>
-                {errors.owner_email && (
+                {errors.room_price && (
                   <div className="invalid-feedback d-block">
-                    {errors.owner_email}
+                    {errors.room_price}
                   </div>
                 )}
               </div>
             </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="owner_mobile">Mobile Number</label>
-                <div className="input_items">
-                  <span>
-                    <LuPhoneCall />
-                  </span>
-                  <input
-                    type="text"
-                    name="owner_mobile"
-                    value={formData.owner_mobile}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.owner_mobile && (
-                  <div className="invalid-feedback d-block">
-                    {errors.owner_mobile}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
 
-          <div className="row first_row">
-            <h4 className="my-5">Billing / Invoice Related Matters</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="billing_contact_name">
-                  Contact Person Name
-                </label>
+                <label htmlFor="room_image">Room Image Link</label>
                 <div className="input_items">
                   <span>
-                    <LuUser />
+                    <LuLink />
                   </span>
                   <input
                     type="text"
-                    name="billing_contact_name"
-                    value={formData.billing_contact_name}
+                    name="room_image"
+                    value={formData.room_image}
                     onChange={handleInputChange}
+                    placeholder="Share Your Drive Link"
                   />
                 </div>
-                {errors.billing_contact_name && (
+                {errors.room_image && (
                   <div className="invalid-feedback d-block">
-                    {errors.billing_contact_name}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="input_wrapper">
-                <label htmlFor="billing_designation">Designation</label>
-                <div className="input_items">
-                  <span>
-                    <LuBadgeInfo />
-                  </span>
-                  <input
-                    type="text"
-                    name="billing_designation"
-                    value={formData.billing_designation}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.billing_designation && (
-                  <div className="invalid-feedback d-block">
-                    {errors.billing_designation}
+                    {errors.room_image}
                   </div>
                 )}
               </div>
@@ -472,65 +367,44 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
           <div className="row first_row">
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="billing_email">Email Address</label>
+                <label htmlFor="description">Room Description</label>
                 <div className="input_items">
                   <span>
-                    <LuMail />
+                    <LuNotepadText />
                   </span>
-                  <input
-                    type="text"
-                    name="billing_email"
-                    value={formData.billing_email}
+                  <textarea
+                    name="description"
+                    value={formData.description}
                     onChange={handleInputChange}
-                    className={errors.billing_email ? "is-invalid" : ""}
+                    className={errors.description ? "is-invalid" : ""}
                   />
                 </div>
-                {errors.billing_email && (
+                {errors.description && (
                   <div className="invalid-feedback d-block">
-                    {errors.billing_email}
+                    {errors.description}
                   </div>
                 )}
               </div>
             </div>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label htmlFor="billing_mobile">Mobile Number</label>
+                <label htmlFor="additional_info">If you want to provide additional information...</label>
                 <div className="input_items">
                   <span>
-                    <LuPhoneCall />
-                  </span>
-                  <input
-                    type="text"
-                    name="billing_mobile"
-                    value={formData.billing_mobile}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                {errors.billing_mobile && (
-                  <div className="invalid-feedback d-block">
-                    {errors.billing_mobile}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="row first_row">
-            <div className="col-md-12 item">
-              <div className="input_wrapper">
-                <label htmlFor="additional_info">
-                  If you want to provide additional information...
-                </label>
-                <div className="input_items">
-                  <span>
-                    <LuInfo />
+                    <LuNotepadText />
                   </span>
                   <textarea
                     name="additional_info"
-                    id="additional_info"
                     value={formData.additional_info}
                     onChange={handleInputChange}
+                    className={errors.additional_info ? "is-invalid" : ""}
                   />
                 </div>
+                {errors.additional_info && (
+                  <div className="invalid-feedback d-block">
+                    {errors.additional_info}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -560,4 +434,4 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
   );
 };
 
-export default ContactDetails;
+export default RoomDetails;

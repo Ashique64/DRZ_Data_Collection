@@ -6,6 +6,7 @@ import {
   LuImage,
   LuGlobe,
   LuClipboardList,
+  LuBed,
 } from "react-icons/lu";
 
 import { useParams } from "react-router-dom";
@@ -17,6 +18,7 @@ import Overview from "../../components/Overview/Overview";
 import BaseURL from "../../API/BaseURLS";
 import AccessDenied from "../AccessDenied/AccessDenied";
 import FormLoading from "../../components/FormLoading/FormLoading";
+import RoomDetails from "../../components/RoomDetails/RoomDetails";
 
 const Form = () => {
   const { token } = useParams();
@@ -27,6 +29,7 @@ const Form = () => {
   const [sessionId, setSessionId] = useState(null);
   const [propertyData, setPropertyData] = useState({});
   const [contactData, setContactData] = useState({});
+  const [roomData, setRoomData] = useState({});
   const [galleryData, setGalleryData] = useState({});
   const [websitDetails, setWebsitDetails] = useState({});
 
@@ -111,15 +114,6 @@ const Form = () => {
           <div className="col-md-12 form-col">
             <div className="outline-tabs">
               <div className="tabs-header" ref={tabsHeaderRef}>
-                {/* <button
-                  className={`tab-button ${
-                    activeTab === "guidelines" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("guidelines")}
-                >
-                  <LuUser className="tab-icon" />
-                  Guidelines
-                </button> */}
                 <button
                   className={`tab-button ${
                     activeTab === "property-details" ? "active" : ""
@@ -137,6 +131,15 @@ const Form = () => {
                 >
                   <LuContact className="tab-icon" />
                   Contact Details
+                </button>
+                <button
+                  className={`tab-button ${
+                    activeTab === "room-details" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("room-details")}
+                >
+                  <LuBed className="tab-icon" />
+                  Room Type
                 </button>
                 <button
                   className={`tab-button ${
@@ -167,17 +170,6 @@ const Form = () => {
                 </button>
               </div>
               <div className="tabs-content">
-                {/* {activeTab === "guidelines" && (
-                  <div className="tab-panel">
-                    <div className="row guideline-row">
-                      <div className="title-section">
-                        <h3>Read the Guidelines</h3>
-                      </div>
-
-                      <div className="col-md-12 guideline-col"></div>
-                    </div>
-                  </div>
-                )} */}
                 {activeTab === "property-details" && (
                   <PropertyDetails
                     token={token}
@@ -195,9 +187,20 @@ const Form = () => {
                     sessionId={sessionId}
                     onNext={() => {
                       setContactData(contactData);
-                      setActiveTab("gallery");
+                      setActiveTab("room-details");
                     }}
                     initialData={contactData}
+                  />
+                )}
+                {activeTab === "room-details" && (
+                  <RoomDetails
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => {
+                      setRoomData(roomData);
+                      setActiveTab("gallery");
+                    }}
+                    initialData={roomData}
                   />
                 )}
                 {activeTab === "gallery" && (
@@ -223,10 +226,7 @@ const Form = () => {
                   />
                 )}
                 {activeTab === "overview" && (
-                  <Overview
-                    token={token}
-                    sessionId={sessionId}
-                  />
+                  <Overview token={token} sessionId={sessionId} />
                 )}
               </div>
             </div>
