@@ -48,6 +48,7 @@ const Home = () => {
         {
           email: clientEmail,
           name: clientName,
+          category_id: selectedOption,  
         },
         {
           headers: {

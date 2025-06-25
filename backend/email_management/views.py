@@ -19,6 +19,8 @@ class SendFormLinkView(APIView):
         try:
             client_email = request.data.get("email")
             client_name = request.data.get("name")
+            category_id = request.data.get("category_id")
+            category = get_object_or_404(Categories, id=category_id)
 
             if not client_name or not client_email or "@" not in client_email:
                 return Response(
@@ -32,6 +34,8 @@ class SendFormLinkView(APIView):
                 token=token,
                 client_email=client_email,
                 client_name=client_name,
+                salesman=request.user,
+                category=category,
             )
 
             form_url = f"{settings.FRONTEND_URL}/form/{token}/"
@@ -107,5 +111,5 @@ class VerifyTokenView(APIView):
 class CategoryList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
-    queryset = Categories.objects.all()
     serializer_class = CategorySerializer
+    queryset = Categories.objects.all()
