@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS";
-import { LuMail, LuPhoneCall, LuUser, LuBadgeInfo, LuArrowRight, LuLoader } from "react-icons/lu";
+import {
+  LuMail,
+  LuPhoneCall,
+  LuUser,
+  LuBadgeInfo,
+  LuArrowRight,
+  LuLoader,
+  LuInfo,
+} from "react-icons/lu";
 
 const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +31,7 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
     billing_designation: "",
     billing_email: "",
     billing_mobile: "",
+    additional_info: "",
   });
 
   const loadExistingData = async () => {
@@ -31,7 +40,7 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
     // setLoading(true);
     try {
       const response = await axios.get(
-        `${BaseURL}/api/data/contact-details/${sessionId}/`
+        `${BaseURL}/api/contact/contact-details/${sessionId}/`
       );
 
       if (response.data.success && response.data.data) {
@@ -98,26 +107,44 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
     if (!formData.op_mobile.trim()) {
       newErrors.op_mobile = "Mobile number is required";
     }
-
-    // Validate owner contacts if provided
-    if (formData.owner_contact_name && !formData.owner_email) {
-      newErrors.owner_email = "Email is required for owner contact";
+    if (!formData.op_designation.trim()) {
+      newErrors.op_designation = "Designation is required";
     }
 
-    if (formData.owner_email && !/\S+@\S+\.\S+/.test(formData.owner_email)) {
+    // Validate owner contacts if provided
+    if (!formData.owner_contact_name.trim()) {
+      newErrors.owner_contact_name = "Owner name is required";
+    }
+
+    if (!formData.owner_email.trim()) {
+      newErrors.owner_email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.owner_email)) {
       newErrors.owner_email = "Please enter a valid email";
     }
 
-    // Validate billing contacts if provided
-    if (formData.billing_contact_name && !formData.billing_email) {
-      newErrors.billing_email = "Email is required for billing contact";
+    if (!formData.owner_mobile.trim()) {
+      newErrors.owner_mobile = "Mobile number is required";
+    }
+    if (!formData.owner_designation.trim()) {
+      newErrors.owner_designation = "Designation is required";
     }
 
-    if (
-      formData.billing_email &&
-      !/\S+@\S+\.\S+/.test(formData.billing_email)
-    ) {
+    // Validate billing contacts if provided
+    if (!formData.billing_contact_name.trim()) {
+      newErrors.billing_contact_name = "Billing contact person name is required";
+    }
+
+    if (!formData.billing_email.trim()) {
+      newErrors.billing_email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.billing_email)) {
       newErrors.billing_email = "Please enter a valid email";
+    }
+
+    if (!formData.billing_mobile.trim()) {
+      newErrors.billing_mobile = "Mobile number is required";
+    }
+    if (!formData.billing_designation.trim()) {
+      newErrors.billing_designation = "Designation is required";
     }
 
     setErrors(newErrors);
@@ -132,7 +159,7 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
     setSaving(true);
     try {
       const response = await axios.post(
-        `${BaseURL}/api/data/contact-details/${sessionId}/`,
+        `${BaseURL}/api/contact/contact-details/${sessionId}/`,
         formData,
         {
           headers: {
@@ -246,6 +273,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.op_contact_name && (
+                  <div className="invalid-feedback d-block">
+                    {errors.op_contact_name}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -313,6 +345,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.owner_contact_name && (
+                  <div className="invalid-feedback d-block">
+                    {errors.owner_contact_name}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-md-12 col-lg-6 item">
@@ -329,6 +366,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.owner_designation && (
+                  <div className="invalid-feedback d-block">
+                    {errors.owner_designation}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -370,6 +412,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.owner_mobile && (
+                  <div className="invalid-feedback d-block">
+                    {errors.owner_mobile}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -392,6 +439,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.billing_contact_name && (
+                  <div className="invalid-feedback d-block">
+                    {errors.billing_contact_name}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-md-12 col-lg-6 item">
@@ -408,6 +460,11 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.billing_designation && (
+                  <div className="invalid-feedback d-block">
+                    {errors.billing_designation}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -446,6 +503,31 @@ const ContactDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     type="text"
                     name="billing_mobile"
                     value={formData.billing_mobile}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                {errors.billing_mobile && (
+                  <div className="invalid-feedback d-block">
+                    {errors.billing_mobile}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="row first_row">
+            <div className="col-md-12 item">
+              <div className="input_wrapper">
+                <label htmlFor="additional_info">
+                  If you want to provide additional information...
+                </label>
+                <div className="input_items">
+                  <span>
+                    <LuInfo />
+                  </span>
+                  <textarea
+                    name="additional_info"
+                    id="additional_info"
+                    value={formData.additional_info}
                     onChange={handleInputChange}
                   />
                 </div>

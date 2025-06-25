@@ -9,16 +9,7 @@ urlpatterns = [
         InitializeFormSessionView.as_view(),
         name="initialize_form_session",
     ),
-    # path(
-    #     "property-details/<str:session_id>/",
-    #     SavePropertyDetailsView.as_view(),
-    #     name="save_property_details",
-    # ),
-    # path(
-    #     "contact-details/<str:session_id>/",
-    #     SaveContactDetailsView.as_view(),
-    #     name="save_contact_details",
-    # ),
+    
     # path(
     #     "gallery-details/<str:session_id>/",
     #     SaveGalleryDetailsView.as_view(),

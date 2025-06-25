@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/email/', include('email_management.urls')),
     path('api/data/', include('form_submission.urls')),
     path('api/property/', include('property_details.urls')),
+    path('api/contact/', include('contact_details.urls')),
     
 ]

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "email_management",
     'form_submission',
     'property_details',
+    'contact_details',
 ]
 
 REST_FRAMEWORK = {
