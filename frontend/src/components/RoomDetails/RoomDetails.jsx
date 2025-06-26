@@ -59,8 +59,8 @@ const RoomDetails = ({ sessionId, onNext, onSave, initialData }) => {
       return;
     }
 
-    console.log("Loading existing data for sessionId:", sessionId);
-    setLoading(true);
+    // console.log("Loading existing data for sessionId:", sessionId);
+    // setLoading(true);
 
     try {
       const response = await axios.get(
@@ -119,12 +119,12 @@ const RoomDetails = ({ sessionId, onNext, onSave, initialData }) => {
     } finally {
       setLoading(false);
       setDataLoaded(true);
-      console.log("Data loading completed");
+      // console.log("Data loading completed");
     }
   };
 
   useEffect(() => {
-    console.log("First useEffect - initialData:", initialData, "sessionId:", sessionId, "dataLoaded:", dataLoaded);
+    // console.log("First useEffect - initialData:", initialData, "sessionId:", sessionId, "dataLoaded:", dataLoaded);
     
     if (initialData && Object.keys(initialData).length > 0) {
       // console.log("Using initialData");

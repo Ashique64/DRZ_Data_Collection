@@ -1,31 +1,20 @@
 import React, { useEffect, useState } from "react";
 import UploadModal from "../UploadModal/UploadModal";
-import {
-  LuArrowRight,
-  LuImage,
-  LuLink,
-  LuLoader,
-  LuTrash2,
-  LuVideo,
-} from "react-icons/lu";
+import { LuArrowRight, LuImage, LuLink, LuLoader } from "react-icons/lu";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS";
 
 const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [uploadType, setUploadType] = useState("");
-  const [currentSection, setCurrentSection] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    video_links: "",
-    primary_images: [],
-    secondary_images: [],
-    primary_videos: [],
-    secondary_videos: [],
-    deleted_files: [],
+    accommodation_links: "",
+    ambience_links: "",
+    amenities_links: "",
+    other_links: "",
   });
 
   const loadExistingData = async () => {
@@ -33,19 +22,11 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
     try {
       const response = await axios.get(
-        `${BaseURL}/api/data/gallery-details/${sessionId}/`
+        `${BaseURL}/api/gallery/gallery-details/${sessionId}/`
       );
 
       if (response.data.success && response.data.data) {
-        const { video_links, media_files } = response.data.data;
-        setFormData({
-          video_links: video_links || "",
-          primary_images: media_files?.primary_images || [],
-          secondary_images: media_files?.secondary_images || [],
-          primary_videos: media_files?.primary_videos || [],
-          secondary_videos: media_files?.secondary_videos || [],
-          deleted_files: [],
-        });
+        setFormData(response.data.data);
       }
     } catch (error) {
       console.error("Error loading gallery data:", error);
@@ -65,51 +46,58 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
     } else if (sessionId && !dataLoaded) {
       loadExistingData();
     }
-  }, [sessionId, initialData]);
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0 && !dataLoaded) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...initialData,
+      }));
+    }
+  }, [initialData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
-  const handleOpenModal = (type, section) => {
-    setUploadType(type);
-    setCurrentSection(section);
-    setShowModal(true);
-  };
-
-  const handleUpload = async (files, type, section) => {
-    const fieldName = `${section}_${type === "images" ? "images" : "videos"}`;
-    const formData = new FormData();
-
-    files.forEach((file) => {
-      formData.append(fieldName, file);
-    });
-
-    try {
-      const response = await axios.post(
-        `${BaseURL}/api/data/gallery-details/${sessionId}/`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      if (response.data.success) {
-        await loadExistingData();
-        setMessage("Files uploaded successfully!");
-        setTimeout(() => setMessage(""), 3000);
-      }
-    } catch (error) {
-      setMessage("Error uploading files");
-      console.error("Upload error:", error);
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
-    setShowModal(false);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.accommodation_links.trim()) {
+      newErrors.accommodation_links = "Link is required";
+    }
+    if (!formData.ambience_links.trim()) {
+      newErrors.ambience_links = "Link is required";
+    }
+    if (!formData.amenities_links.trim()) {
+      newErrors.amenities_links = "Link is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const saveData = async (showMessage = true) => {
+    if (!validateForm()) {
+      return false;
+    }
+
     setSaving(true);
     try {
       const response = await axios.post(
-        `${BaseURL}/api/data/gallery-details/${sessionId}/`,
+        `${BaseURL}/api/gallery/gallery-details/${sessionId}/`,
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -121,6 +109,9 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
         }
         if (onSave) onSave("gallery", formData);
         return true;
+      } else {
+        setMessage(response.data.error || "Failed to save gallery details");
+        return false;
       }
     } catch (error) {
       setMessage("Error saving gallery");
@@ -133,7 +124,11 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   const handleNext = async () => {
     const saved = await saveData(false);
-    if (saved && onNext) onNext();
+    if (saved && onNext) {
+      setTimeout(() => {
+        onNext();
+      }, 1000);
+    }
   };
 
   if (loading) {
@@ -151,104 +146,97 @@ const GalleryDetails = ({ sessionId, onNext, onSave, initialData }) => {
 
   return (
     <div className="tab-panel">
-      {showModal && (
-        <UploadModal
-          onClose={() => setShowModal(false)}
-          onUpload={(files) => handleUpload(files, uploadType, currentSection)}
-          maxFiles={uploadType === "images" ? 10 : 3}
-          maxSizeMB={uploadType === "images" ? 5 : 30}
-          type={uploadType}
-          section={currentSection}
-        />
-      )}
-
       <div className="row details-row">
         <div className="title-section">
-          <h3>Photos & Videos</h3>
+          <h3>Share Photos & Videos</h3>
           {message && <div className="alert alert-success mt-3">{message}</div>}
         </div>
 
         <div className="form-section">
           <div className="row first_row">
-            <h4 className="mb-3">Upload Images</h4>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="upload_wrapper">
-                <label>Primary Images</label>
-                <div className="upload_button">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => handleOpenModal("images", "primary")}
-                  >
-                    Upload
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="upload_wrapper">
-                <label>Secondary Images</label>
-                <div className="upload_button">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => handleOpenModal("images", "secondary")}
-                  >
-                    Upload
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row first_row">
-            <h4 className="mb-3 mt-5">Upload Videos</h4>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="upload_wrapper">
-                <label>Primary Videos</label>
-                <div className="upload_button">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => handleOpenModal("videos", "primary")}
-                  >
-                    Upload
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-12 col-lg-6 item">
-              <div className="upload_wrapper">
-                <label>Secondary Videos</label>
-                <div className="upload_button">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => handleOpenModal("videos", "secondary")}
-                  >
-                    Upload
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="row first_row">
-            <h4 className="mb-3 mt-5">
-              Share Video Links <br />
-            </h4>
+            <h4 className="mb-3">Share The Relevent Images/Video Link</h4>
             <div className="col-md-12 col-lg-6 item">
               <div className="input_wrapper">
-                <label>Video Links (one per line)</label>
+                <label>Accommodation/Hotel</label>
                 <div className="input_items">
                   <span>
                     <LuLink />
                   </span>
-                  <textarea
-                    name="video_links"
-                    value={formData.video_links}
+                  <input
+                    type="text"
+                    name="accommodation_links"
+                    value={formData.accommodation_links}
                     onChange={handleInputChange}
-                    placeholder="eg :- YouTube or other video links"
+                    placeholder="eg :- Drive Link, Youtube Link, etc ..."
+                  />
+                </div>
+                {errors.accommodation_links && (
+                  <div className="invalid-feedback d-block">
+                    {errors.accommodation_links}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label>Location & Ambience</label>
+                <div className="input_items">
+                  <span>
+                    <LuLink />
+                  </span>
+                  <input
+                    type="text"
+                    name="ambience_links"
+                    value={formData.ambience_links}
+                    onChange={handleInputChange}
+                    placeholder="eg :- Drive Link, Youtube Link, etc ..."
+                  />
+                </div>
+                {errors.ambience_links && (
+                  <div className="invalid-feedback d-block">
+                    {errors.ambience_links}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label>Amenities</label>
+                <div className="input_items">
+                  <span>
+                    <LuLink />
+                  </span>
+                  <input
+                    type="text"
+                    name="amenities_links"
+                    value={formData.amenities_links}
+                    onChange={handleInputChange}
+                    placeholder="eg :- Drive Link, Youtube Link, etc ..."
+                  />
+                </div>
+                {errors.amenities_links && (
+                  <div className="invalid-feedback d-block">
+                    {errors.amenities_links}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label>Any other suitable pictures</label>
+                <div className="input_items">
+                  <span>
+                    <LuLink />
+                  </span>
+                  <input
+                    type="text"
+                    name="other_links"
+                    value={formData.other_links}
+                    onChange={handleInputChange}
+                    placeholder="eg :- Drive Link, Youtube Link, etc ..."
                   />
                 </div>
               </div>
