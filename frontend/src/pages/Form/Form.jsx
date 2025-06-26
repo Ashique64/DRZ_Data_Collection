@@ -7,6 +7,7 @@ import {
   LuGlobe,
   LuClipboardList,
   LuBed,
+  LuBadgeCheck,
 } from "react-icons/lu";
 
 import { useParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import BaseURL from "../../API/BaseURLS";
 import AccessDenied from "../AccessDenied/AccessDenied";
 import FormLoading from "../../components/FormLoading/FormLoading";
 import RoomDetails from "../../components/RoomDetails/RoomDetails";
+import PropertyFacilities from "../../components/PropertyFacilities/PropertyFacilities";
 
 const Form = () => {
   const { token } = useParams();
@@ -32,6 +34,7 @@ const Form = () => {
   const [roomData, setRoomData] = useState({});
   const [galleryData, setGalleryData] = useState({});
   const [websitDetails, setWebsitDetails] = useState({});
+  const [propertyFacilities, setpropertyFacilities] = useState({});
 
   const verifyToken = async () => {
     try {
@@ -161,6 +164,15 @@ const Form = () => {
                 </button>
                 <button
                   className={`tab-button ${
+                    activeTab === "property-facilities" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("property-facilities")}
+                >
+                  <LuBadgeCheck className="tab-icon" />
+                  Property Facilities
+                </button>
+                <button
+                  className={`tab-button ${
                     activeTab === "overview" ? "active" : ""
                   }`}
                   onClick={() => setActiveTab("overview")}
@@ -220,9 +232,20 @@ const Form = () => {
                     sessionId={sessionId}
                     onNext={() => {
                       setWebsitDetails(websitDetails);
-                      setActiveTab("overview");
+                      setActiveTab("property-facilities");
                     }}
                     initialData={websitDetails}
+                  />
+                )}
+                {activeTab === "property-facilities" && (
+                  <PropertyFacilities
+                    token={token}
+                    sessionId={sessionId}
+                    onNext={() => {
+                      setpropertyFacilities(propertyFacilities);
+                      setActiveTab("overview");
+                    }}
+                    initialData={propertyFacilities}
                   />
                 )}
                 {activeTab === "overview" && (

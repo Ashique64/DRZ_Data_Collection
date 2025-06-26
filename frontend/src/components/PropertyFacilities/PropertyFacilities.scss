@@ -1,0 +1,24 @@
+.tab-panel {
+    .details-row {
+        .title-section {
+            .selected_fecility {
+                display: flex;
+                justify-content: start ;
+
+                select {
+                    border: none;
+                    padding: 8px 15px;
+                    background: transparent;
+                    color: var(--primary-color);
+                    outline: 1px solid var(--accent-color);
+                    border-radius: 8px;
+                    font-size: 14px;
+
+                    option {
+                        color: var(--primary-dark);
+                    }
+                }
+            }
+        }
+    }
+}

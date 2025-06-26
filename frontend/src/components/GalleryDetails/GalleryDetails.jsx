@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import UploadModal from "../UploadModal/UploadModal";
 import { LuArrowRight, LuImage, LuLink, LuLoader } from "react-icons/lu";
 import axios from "axios";
 import BaseURL from "../../API/BaseURLS";
