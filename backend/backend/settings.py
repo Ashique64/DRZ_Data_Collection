@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'contact_details',
     'room_details',
     'gallery_details',
+    'website_details',
 ]
 
 REST_FRAMEWORK = {
