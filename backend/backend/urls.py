@@ -26,5 +26,6 @@ urlpatterns = [
     path('api/property/', include('property_details.urls')),
     path('api/contact/', include('contact_details.urls')),
     path('api/room/', include('room_details.urls')),
+    path('api/gallery/', include('gallery_details.urls')),
     
 ]
