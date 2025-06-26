@@ -9,8 +9,6 @@ from .models import WebsiteDetails
 
 # Create your views here.
 
-
-
 class SaveWebsiteDetailsView(APIView):
     permission_classes = [AllowAny]
 
