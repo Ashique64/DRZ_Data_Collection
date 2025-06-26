@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'form_submission',
     'property_details',
     'contact_details',
+    'room_details',
 ]
 
 REST_FRAMEWORK = {
