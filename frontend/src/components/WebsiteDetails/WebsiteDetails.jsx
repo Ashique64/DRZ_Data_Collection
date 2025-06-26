@@ -65,7 +65,10 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
         });
 
         if (data.property_logo) {
-          setLogoPreview(data.property_logo);
+          const fullUrl = data.property_logo.startsWith("http")
+            ? data.property_logo
+            : `${BaseURL}${data.property_logo}`;
+          setLogoPreview(fullUrl);
         }
       }
     } catch (error) {
@@ -192,11 +195,11 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
     if (!formData.whatsapp.trim()) {
       newErrors.whatsapp = "Whatsapp number is Required";
     }
-    
+
     if (formData.whatsapp && !/^(\+)?[0-9]+$/.test(formData.whatsapp)) {
       newErrors.whatsapp = "Please enter a valid WhatsApp number";
     }
-    
+
     if (!formData.facebook.trim()) {
       newErrors.facebook = "Facebook URL is Required";
     }
@@ -443,7 +446,6 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     value={formData.domain_password}
                     onChange={handleInputChange}
                     placeholder="Not purchased any domain yet, please write NA"
-
                   />
                 </div>
                 {errors.domain_password && (
