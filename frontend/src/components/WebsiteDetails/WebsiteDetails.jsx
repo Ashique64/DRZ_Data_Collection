@@ -11,6 +11,7 @@ import {
   LuUser,
   LuArrowRight,
   LuLoader,
+  LuMapPinCheckInside,
 } from "react-icons/lu";
 import { FaWhatsapp, FaTwitter, FaInstagram, FaFacebook } from "react-icons/fa";
 
@@ -26,6 +27,7 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
     website_name: "",
     about_us_content: "",
     additional_content: "",
+    near_by: "",
     domain_url: "",
     domain_password: "",
     domain_username: "",
@@ -41,7 +43,7 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
     if (!sessionId) return;
     try {
       const response = await axios.get(
-        `${BaseURL}/api/data/website-details/${sessionId}/`
+        `${BaseURL}/api/website/website-details/${sessionId}/`
       );
 
       if (response.data.success && response.data.data) {
@@ -50,6 +52,7 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
           website_name: data.website_name || "",
           about_us_content: data.about_us_content || "",
           additional_content: data.additional_content || "",
+          near_by: data.near_by || "",
           domain_url: data.domain_url || "",
           domain_password: data.domain_password || "",
           domain_username: data.domain_username || "",
@@ -83,7 +86,16 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
     } else if (sessionId && !dataLoaded) {
       loadExistingData();
     }
-  }, [sessionId, initialData]);
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0 && !dataLoaded) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...initialData,
+      }));
+    }
+  }, [initialData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -146,8 +158,17 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
   const validateForm = () => {
     const newErrors = {};
 
+    if (!formData.property_logo) {
+      newErrors.property_logo = "Property logo is required";
+    }
     if (!formData.website_name.trim()) {
       newErrors.website_name = "Website name is required";
+    }
+    if (!formData.about_us_content.trim()) {
+      newErrors.about_us_content = "About content is required";
+    }
+    if (!formData.domain_url.trim()) {
+      newErrors.domain_url = "This field Required";
     }
 
     if (
@@ -159,10 +180,29 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
       }
     }
 
+    if (!formData.domain_password.trim()) {
+      newErrors.domain_password = "This field Required";
+    }
+    if (!formData.domain_username.trim()) {
+      newErrors.domain_username = "This field Required";
+    }
+    if (!formData.existing_website_link.trim()) {
+      newErrors.existing_website_link = "This field Required";
+    }
+    if (!formData.whatsapp.trim()) {
+      newErrors.whatsapp = "Whatsapp number is Required";
+    }
+    
     if (formData.whatsapp && !/^(\+)?[0-9]+$/.test(formData.whatsapp)) {
       newErrors.whatsapp = "Please enter a valid WhatsApp number";
     }
-
+    
+    if (!formData.facebook.trim()) {
+      newErrors.facebook = "Facebook URL is Required";
+    }
+    if (!formData.instagram.trim()) {
+      newErrors.instagram = "Instagram URL is Required";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -185,7 +225,7 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
       });
 
       const response = await axios.post(
-        `${BaseURL}/api/data/website-details/${sessionId}/`,
+        `${BaseURL}/api/website/website-details/${sessionId}/`,
         formDataToSend,
         {
           headers: {
@@ -323,6 +363,11 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+                {errors.about_us_content && (
+                  <div className="invalid-feedback d-block">
+                    {errors.about_us_content}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-md-12 col-lg-6 item">
@@ -336,6 +381,24 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     name="additional_content"
                     value={formData.additional_content}
                     onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="row first_row">
+            <div className="col-md-12 col-lg-6 item">
+              <div className="input_wrapper">
+                <label>Near by Attractions and Localities</label>
+                <div className="input_items">
+                  <span>
+                    <LuMapPinCheckInside />
+                  </span>
+                  <textarea
+                    name="near_by"
+                    value={formData.near_by}
+                    onChange={handleInputChange}
+                    placeholder="Mention any neighbourhood places or attractions around your property"
                   />
                 </div>
               </div>
@@ -379,8 +442,15 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     name="domain_password"
                     value={formData.domain_password}
                     onChange={handleInputChange}
+                    placeholder="Not purchased any domain yet, please write NA"
+
                   />
                 </div>
+                {errors.domain_password && (
+                  <div className="invalid-feedback d-block">
+                    {errors.domain_password}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -398,8 +468,14 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     name="domain_username"
                     value={formData.domain_username}
                     onChange={handleInputChange}
+                    placeholder="Not purchased any domain yet, please write NA"
                   />
                 </div>
+                {errors.domain_username && (
+                  <div className="invalid-feedback d-block">
+                    {errors.domain_username}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-md-12 col-lg-6 item">
@@ -414,8 +490,14 @@ const WebsiteDetails = ({ sessionId, onNext, onSave, initialData }) => {
                     name="existing_website_link"
                     value={formData.existing_website_link}
                     onChange={handleInputChange}
+                    placeholder="Don't have a website, please write NA"
                   />
                 </div>
+                {errors.existing_website_link && (
+                  <div className="invalid-feedback d-block">
+                    {errors.existing_website_link}
+                  </div>
+                )}
               </div>
             </div>
           </div>
