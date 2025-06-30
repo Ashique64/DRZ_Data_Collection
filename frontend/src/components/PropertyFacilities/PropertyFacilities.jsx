@@ -1,8 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { LuArrowRight, LuChevronDown, LuChevronUp, LuImage, LuLink, LuLoader } from "react-icons/lu";
+import {
+  LuArrowRight,
+  LuChevronDown,
+  LuChevronUp,
+  LuImage,
+  LuLink,
+  LuLoader,
+} from "react-icons/lu";
 import BaseURL from "../../API/BaseURLS";
 import "./PropertyFacilities.scss";
 import BasicFacilities from "../Facilities/BasicFacilities/BasicFacilities";
+import GeneralServices from "../Facilities/GeneralServices/GeneralServices";
+import OutdoorActivities from "../Facilities/OutdoorActivities/OutdoorActivities";
+import CommonArea from "../Facilities/CommonArea/CommonArea";
+import FoodDrink from "../Facilities/Food&Drink/Food&Drink";
+import HealthWellness from "../Facilities/Health&Wellness/Health&Wellness";
+import BusinessCenter from "../Facilities/BusinessCenter/BusinessCenter";
+import BeautySpa from "../Facilities/Beauty&Spa/Beauty&Spa";
+import Security from "../Facilities/Security/Security";
+import Transfers from "../Facilities/Transfers/Transfers";
+import PaymentServices from "../Facilities/PaymentServices/PaymentServices";
+import MediaTechnology from "../Facilities/Media&Technology/Media&Technology";
+import IndoorActivites from "../Facilities/IndoorActivites/IndoorActivites";
+import FamilyKids from "../Facilities/Family&Kids/Family&Kids";
 
 const PropertyFacilities = () => {
   const [activeTab, setActiveTab] = useState("BasicFacilities");
@@ -42,34 +62,39 @@ const PropertyFacilities = () => {
       case "BasicFacilities":
         return <BasicFacilities />;
       case "GeneralServices":
-        return (
-          <div className="tab-content-wrapper">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est,
-            excepturi illo neque eaque error corrupti laborum alias veniam natus
-            molestias in cupiditate magnam ratione voluptatem!
-          </div>
-        );
+        return <GeneralServices />;
       case "OutdoorActivities":
-        return (
-          <div className="tab-content-wrapper">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Aspernatur, illum.
-          </div>
-        );
+        return <OutdoorActivities />;
       case "CommonArea":
-        return (
-          <div className="tab-content-wrapper">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi
-            quasi dicta qui porro eligendi nam doloribus vel minus ullam quam!
-          </div>
-        );
+        return <CommonArea />;
       case "Food&Drink":
-        return (
-          <div className="tab-content-wrapper">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi
-            quasi dicta qui porro eligendi nam doloribus vel minus ullam quam!
-          </div>
-        );
+        return <FoodDrink />;
+      case "Health&Wellness":
+        return <HealthWellness />;
+      case "BusinessCenter":
+        return <BusinessCenter />;
+      case "Beauty&Spa":
+        return <BeautySpa />;
+      case "Security":
+        return <Security />;
+      case "Transfers":
+        return <Transfers />;
+      case "PaymentServices":
+        return <PaymentServices />;
+      case "Media&Technology":
+        return <MediaTechnology />;
+      case "IndoorActivites":
+        return <IndoorActivites />;
+      case "Family&Kids":
+        return <FamilyKids />;
+      case "Safty&Hygiene":
+        return <CommonArea />;
+      case "PetEssentials":
+        return <CommonArea />;
+      case "Entertainment":
+        return <CommonArea />;
+      case "Shopping":
+        return <CommonArea />;
       default:
         return (
           <div className="tab-content-wrapper">
