@@ -29,17 +29,130 @@
 
             button {
               text-align: start;
-              background-color: transparent;;
+              background-color: transparent;
               color: var(--para-color-2);
+              border: none;
+              transition: all 0.2s ease;
 
               &.active {
                 background-color: var(--form-color);
                 color: var(--primary-color);
               }
+              &:hover {
+                background-color: var(--para-color-2);
+                color: var(--primary-color);
+              }
+            }
+          }
+        }
+
+        .tab_content_col {
+          .tab-content {
+            .tab-pane {
+              .facility {
+                .facility_row {
+                  .facility_col {
+                    .row {
+                      .col-md-4 {
+                        label {
+                          display: flex;
+                          align-items: center;
+                          gap: 5px;
+                          padding: 10px;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
       }
+
+      .mobile-accordion {
+        .accordion-item {
+          overflow: hidden;
+
+          .accordion-header {
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            color: var(--para-color-2);
+
+            &:hover {
+              background-color: var(--para-color-2);
+              color: var(--primary-color);
+            }
+
+            &.active {
+              background-color: var(--form-color);
+              color: var(--primary-color);
+              // border-bottom: 1px solid #e9ecef;
+            }
+
+            .chevron-icon {
+              width: 20px;
+              height: 20px;
+              transition: transform 0.2s ease;
+              color: inherit;
+            }
+
+            &.active .chevron-icon {
+              transform: rotate(180deg);
+            }
+          }
+
+          .accordion-content {
+            padding: 10px;
+            background: transparent;
+            border-bottom: 1px solid var(--form-color);
+            animation: slideDown 0.3s ease;
+
+            .facility {
+              .facility_row {
+                .facility_col {
+                  .row {
+                    .col-md-4 {
+                      label {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        padding: 10px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .tab-content-wrapper {
+        padding: 24px;
+        line-height: 1.6;
+        background: transparent;
+      }
     }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
   }
 }

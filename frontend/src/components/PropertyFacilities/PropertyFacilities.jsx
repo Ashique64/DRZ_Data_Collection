@@ -1,14 +1,82 @@
 import React, { useEffect, useState } from "react";
-import { LuArrowRight, LuImage, LuLink, LuLoader } from "react-icons/lu";
+import { LuArrowRight, LuChevronDown, LuChevronUp, LuImage, LuLink, LuLoader } from "react-icons/lu";
 import BaseURL from "../../API/BaseURLS";
 import "./PropertyFacilities.scss";
-import BasicFacilities from "../BasicFacilities/BasicFacilities";
+import BasicFacilities from "../Facilities/BasicFacilities/BasicFacilities";
 
 const PropertyFacilities = () => {
   const [activeTab, setActiveTab] = useState("BasicFacilities");
+  const [expandedMobile, setExpandedMobile] = useState(null);
+
+  const tabs = [
+    { id: "BasicFacilities", label: "Basic Facilities" },
+    { id: "GeneralServices", label: "General Services" },
+    { id: "OutdoorActivities", label: "Outdoor Activities & Sports" },
+    { id: "CommonArea", label: "Common Area" },
+    { id: "Food&Drink", label: "Food & Drink" },
+    { id: "Health&Wellness", label: "Health & Wellness" },
+    { id: "BusinessCenter", label: "Business Center & Conference" },
+    { id: "Beauty&Spa", label: "Beauty & Spa" },
+    { id: "Security", label: "Security" },
+    { id: "Transfers", label: "Transfers" },
+    { id: "PaymentServices", label: "Payment Services" },
+    { id: "Media&Technology", label: "Media & Technology" },
+    { id: "IndoorActivites", label: "Indoor Activities & Sports" },
+    { id: "Family&Kids", label: "Family & Kids" },
+    { id: "Safty&Hygiene", label: "Safety & Hygiene" },
+    { id: "PetEssentials", label: "Pet Essentials" },
+    { id: "Entertainment", label: "Entertainment" },
+    { id: "Shopping", label: "Shopping" },
+  ];
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handleMobileToggle = (tabId) => {
+    setExpandedMobile(expandedMobile === tabId ? null : tabId);
+  };
+
+  const renderTabContent = (tabId) => {
+    switch (tabId) {
+      case "BasicFacilities":
+        return <BasicFacilities />;
+      case "GeneralServices":
+        return (
+          <div className="tab-content-wrapper">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est,
+            excepturi illo neque eaque error corrupti laborum alias veniam natus
+            molestias in cupiditate magnam ratione voluptatem!
+          </div>
+        );
+      case "OutdoorActivities":
+        return (
+          <div className="tab-content-wrapper">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            Aspernatur, illum.
+          </div>
+        );
+      case "CommonArea":
+        return (
+          <div className="tab-content-wrapper">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi
+            quasi dicta qui porro eligendi nam doloribus vel minus ullam quam!
+          </div>
+        );
+      case "Food&Drink":
+        return (
+          <div className="tab-content-wrapper">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi
+            quasi dicta qui porro eligendi nam doloribus vel minus ullam quam!
+          </div>
+        );
+      default:
+        return (
+          <div className="tab-content-wrapper">
+            <p>Content for {tabs.find((tab) => tab.id === tabId)?.label}</p>
+          </div>
+        );
+    }
   };
   return (
     <div className="tab-panel">
@@ -23,205 +91,59 @@ const PropertyFacilities = () => {
         </div>
 
         <div className="form-section">
-          <div className="row first_row">
+          <div className="row first_row d-none d-md-flex">
             <div className="tab_items_col col-md-3">
               <div
                 className="nav flex-column nav-pills"
                 role="tablist"
                 aria-orientation="vertical"
               >
-                <button
-                  className={`nav-link ${
-                    activeTab === "BasicFacilities" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("BasicFacilities")}
-                >
-                  Basic Facilities	
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "GeneralServices" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("GeneralServices")}
-                >
-                  General Services	
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "OutdoorActivities" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("OutdoorActivities")}
-                >
-                  Outdoor Activities & Sports
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "CommonArea" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("CommonArea")}
-                >
-                  Common Area
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Food&Drink" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Food&Drink")}
-                >
-                  Food & Drink
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Health&Wellness" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Health&Wellness")}
-                >
-                  Health & Wellness
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "BusinessCenter" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("BusinessCenter")}
-                >
-                  Business Center & Conference	
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Beauty&Spa" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Beauty&Spa")}
-                >
-                  Beauty & Spa
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Security" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Security")}
-                >
-                  Security
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Transfers" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Transfers")}
-                >
-                  Transfers
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "PaymentServices" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("PaymentServices")}
-                >
-                  Payment Services
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Media&Technology" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Media&Technology")}
-                >
-                  Media & Technology
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "IndoorActivites" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("IndoorActivites")}
-                >
-                  Indoor Activities & Sports
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Family&Kids" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Family&Kids")}
-                >
-                  Family & Kids
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Safty&Hygiene" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Safty&Hygiene")}
-                >
-                  Safty & Hygiene
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "PetEssentials" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("PetEssentials")}
-                >
-                  Pet Essentials
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Entertainment" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Entertainment")}
-                >
-                  Entertainment
-                </button>
-                <button
-                  className={`nav-link ${
-                    activeTab === "Shopping" ? "active" : ""
-                  }`}
-                  onClick={() => handleTabClick("Shopping")}
-                >
-                  Shopping
-                </button>
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    className={`nav-link ${
+                      activeTab === tab.id ? "active" : ""
+                    }`}
+                    onClick={() => handleTabClick(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="tab_content_col col-md-9">
               <div className="tab-content">
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "BasicFacilities" ? "show active" : ""
-                  }`}
-                >
-                  <BasicFacilities/>
-                </div>
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "GeneralServices" ? "show active" : ""
-                  }`}
-                >
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est,
-                  excepturi illo neque eaque error corrupti laborum alias veniam
-                  natus molestias in cupiditate magnam ratione voluptatem!
-                </div>
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "OutdoorActivities" ? "show active" : ""
-                  }`}
-                >
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Aspernatur, illum.
-                </div>
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "CommonArea" ? "show active" : ""
-                  }`}
-                >
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Sequi quasi dicta qui porro eligendi nam doloribus vel minus
-                  ullam quam!
-                </div>
-                <div
-                  className={`tab-pane fade ${
-                    activeTab === "Food&Drink" ? "show active" : ""
-                  }`}
-                >
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Sequi quasi dicta qui porro eligendi nam doloribus vel minus
-                  ullam quam!
+                <div className="tab-pane fade show active">
+                  {renderTabContent(activeTab)}
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mobile-accordion d-md-none">
+            {tabs.map((tab) => (
+              <div key={tab.id} className="accordion-item">
+                <button
+                  className={`accordion-header ${
+                    expandedMobile === tab.id ? "active" : ""
+                  }`}
+                  onClick={() => handleMobileToggle(tab.id)}
+                >
+                  <span>{tab.label}</span>
+                  {expandedMobile === tab.id ? (
+                    <LuChevronUp className="chevron-icon" />
+                  ) : (
+                    <LuChevronDown className="chevron-icon" />
+                  )}
+                </button>
+
+                {expandedMobile === tab.id && (
+                  <div className="accordion-content">
+                    {renderTabContent(tab.id)}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="save-btn">
