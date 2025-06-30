@@ -1,24 +1,45 @@
 .tab-panel {
-    .details-row {
-        .title-section {
-            .selected_fecility {
-                display: flex;
-                justify-content: start ;
+  .details-row {
+    .title-section {
+      .selected_fecility {
+        display: flex;
+        justify-content: start;
 
-                select {
-                    border: none;
-                    padding: 8px 15px;
-                    background: transparent;
-                    color: var(--primary-color);
-                    outline: 1px solid var(--accent-color);
-                    border-radius: 8px;
-                    font-size: 14px;
+        select {
+          border: none;
+          padding: 8px 15px;
+          background: transparent;
+          color: var(--primary-color);
+          outline: 1px solid var(--accent-color);
+          border-radius: 8px;
+          font-size: 14px;
 
-                    option {
-                        color: var(--primary-dark);
-                    }
-                }
-            }
+          option {
+            color: var(--primary-dark);
+          }
         }
+      }
     }
+
+    .form-section {
+      .first_row {
+        .tab_items_col {
+          .nav {
+            text-align: start;
+
+            button {
+              text-align: start;
+              background-color: transparent;;
+              color: var(--para-color-2);
+
+              &.active {
+                background-color: var(--form-color);
+                color: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
