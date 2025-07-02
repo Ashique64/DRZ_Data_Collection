@@ -1,13 +1,16 @@
 import React from "react";
 
-const FamilyKids = () => {
+const FamilyKids = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "ChildcareService", label: "Childcare Service" },
-    { name: "Play Area", label: "Children's Play Area" },
+    { name: "PlayArea", label: "Children's Play Area" },
     { name: "KidsClub", label: "Kid's Club" },
     { name: "Strollers", label: "Strollers" },
     { name: "Playground", label: "Playground" },
   ];
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("familyKids", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -20,6 +23,10 @@ const FamilyKids = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.familyKids?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

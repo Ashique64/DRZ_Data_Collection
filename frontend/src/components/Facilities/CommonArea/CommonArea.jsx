@@ -1,13 +1,13 @@
 import React from "react";
 
-const CommonArea = () => {
+const CommonArea = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "Aquarium", label: "Aquarium" },
     { name: "Balcony", label: "Balcony/ Terrace" },
     { name: "Fireplace", label: "Fireplace" },
     { name: "Library", label: "Library" },
     { name: "Reception", label: "Reception" },
-    { name: "Seating Area", label: "Seating Area" },
+    { name: "SeatingArea", label: "Seating Area" },
     { name: "SunDeck", label: "Sun Deck" },
     { name: "Temple", label: "Temple/ Chapel" },
     { name: "PrayerRoom", label: "Prayer Room" },
@@ -16,6 +16,10 @@ const CommonArea = () => {
     { name: "PicnicArea", label: "Picnic Area" },
     { name: "GameRoom", label: "Game Room" },
   ];
+
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("commonArea", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -28,6 +32,10 @@ const CommonArea = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.commonArea?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

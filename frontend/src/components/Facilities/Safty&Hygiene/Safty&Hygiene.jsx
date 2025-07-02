@@ -1,6 +1,6 @@
 import React from "react";
 
-const SaftyHygiene = () => {
+const SaftyHygiene = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "Disinfection", label: "Disinfection" },
     { name: "ShoeCovers", label: "Shoe Covers" },
@@ -15,9 +15,12 @@ const SaftyHygiene = () => {
     { name: "Masks", label: "Masks" },
     { name: "DisinfectantWipes", label: "Disinfectant Wipes" },
     { name: "Gloves", label: "Gloves" },
-    { name: "ContactlessCheck-in", label: "Contactless Check-in" },
+    { name: "ContactlessCheckIn", label: "Contactless Check-in" },
     { name: "SafetyKit", label: "Safety Kit" },
   ];
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("safetyHygiene", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -30,6 +33,10 @@ const SaftyHygiene = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.safetyHygiene?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const OutdoorActivities = () => {
+const OutdoorActivities = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "Beach", label: "Beach" },
     { name: "Kayakas", label: "Kayakas" },
@@ -16,6 +16,10 @@ const OutdoorActivities = () => {
     { name: "JungleSafari", label: "Jungle Safari" },
     { name: "Cycling", label: "Cycling" },
   ];
+
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange('outdoorActivities', facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -28,6 +32,8 @@ const OutdoorActivities = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.outdoorActivities?.[item.name] || false}
+                    onChange={(e) => handleCheckboxChange(item.name, e.target.checked)}
                   />
                   <span>{item.label}</span>
                 </label>

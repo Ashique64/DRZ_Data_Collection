@@ -1,12 +1,19 @@
 import React from "react";
 
-const MediaTechnology = () => {
+const MediaTechnology = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
-    { name: "ElectricalAdaptersAvailable", label: "Electrical Adapters Available" },
+    {
+      name: "ElectricalAdaptersAvailable",
+      label: "Electrical Adapters Available",
+    },
     { name: "ElectricalChargers", label: "Electrical Chargers" },
     { name: "Laptops", label: "Laptops" },
     { name: "TV", label: "TV" },
   ];
+
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("mediaTechnology", facilityName, checked);
+  };
 
   return (
     <div className="facility">
@@ -20,6 +27,10 @@ const MediaTechnology = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.mediaTechnology?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

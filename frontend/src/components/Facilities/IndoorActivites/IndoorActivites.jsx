@@ -1,13 +1,16 @@
 import React from "react";
 
-const IndoorActivites = () => {
+const IndoorActivites = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
-    { name: "Indoor Games", label: "Indoor Games" },
+    { name: "IndoorGames", label: "Indoor Games" },
     { name: "Casino", label: "Casino" },
     { name: "Ludo", label: "Ludo" },
     { name: "Carrom", label: "Carrom" },
     { name: "Chess", label: "Chess" },
   ];
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("indoorActivities", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -20,6 +23,10 @@ const IndoorActivites = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.indoorActivities?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

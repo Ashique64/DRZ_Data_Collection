@@ -1,15 +1,18 @@
 import React from "react";
 
-const BusinessCenter = () => {
+const BusinessCenter = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "Banquet", label: "Banquet" },
     { name: "BusinessCenter", label: "Business Center" },
     { name: "BusinessServices", label: "Business Services" },
-    { name: "Conference Room", label: "Conference Room" },
+    { name: "ConferenceRoom", label: "Conference Room" },
     { name: "Photocopying", label: "Photocopying" },
     { name: "FaxService", label: "Fax Service" },
     { name: "Printer", label: "Printer" },
   ];
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("businessCenter", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -22,6 +25,10 @@ const BusinessCenter = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.businessCenter?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

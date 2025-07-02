@@ -1,9 +1,9 @@
 import React from "react";
 
-const BeautySpa = () => {
+const BeautySpa = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "FacialTreatments", label: "Facial Treatments" },
-    { name: "Hair Treatment", label: "Hair Treatment" },
+    { name: "HairTreatment", label: "Hair Treatment" },
     { name: "Massage", label: "Massage" },
     { name: "Saloon", label: "Spa & Saloon" },
     { name: "SteamSauna", label: "Steam and Sauna" },
@@ -12,6 +12,9 @@ const BeautySpa = () => {
     { name: "PublicBath", label: "Public Bath" },
     { name: "Hammam", label: "Hammam" },
   ];
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("beautySpa", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -24,6 +27,10 @@ const BeautySpa = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.beautySpa?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

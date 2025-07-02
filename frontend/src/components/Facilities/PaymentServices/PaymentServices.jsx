@@ -1,10 +1,14 @@
 import React from "react";
 
-const PaymentServices = () => {
+const PaymentServices = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "CurrencyExchange", label: "Currency Exchange" },
     { name: "ATM", label: "ATM" },
   ];
+
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("paymentServices", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -17,6 +21,10 @@ const PaymentServices = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.paymentServices?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>

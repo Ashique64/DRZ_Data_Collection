@@ -1,6 +1,6 @@
 import React from "react";
 
-const FoodDrink = () => {
+const FoodDrink = ({ facilitiesData, onFacilityChange }) => {
   const facilities = [
     { name: "Bar", label: "Bar" },
     { name: "Minibar", label: "Minibar" },
@@ -9,12 +9,16 @@ const FoodDrink = () => {
     { name: "CoffeeShop", label: "Coffee Shop" },
     { name: "CoffeeMachine", label: "Coffee Machine" },
     { name: "DiningArea", label: "Dining Area" },
-    { name: "Kids Meals", label: "Kids Meals" },
+    { name: "KidsMeals", label: "Kids Meals" },
     { name: "Restaurant", label: "Restaurant" },
     { name: "SpecialDietMeals", label: "Special Diet Meals" },
     { name: "CookingClass", label: "Cooking Class" },
     { name: "Bakery", label: "Bakery" },
   ];
+
+  const handleCheckboxChange = (facilityName, checked) => {
+    onFacilityChange("foodDrink", facilityName, checked);
+  };
   return (
     <div className="facility">
       <div className="row facility_row">
@@ -27,6 +31,10 @@ const FoodDrink = () => {
                     type="checkbox"
                     className="form-checkbox"
                     name={item.name}
+                    checked={facilitiesData?.foodDrink?.[item.name] || false}
+                    onChange={(e) =>
+                      handleCheckboxChange(item.name, e.target.checked)
+                    }
                   />
                   <span>{item.label}</span>
                 </label>
