@@ -1,17 +1,13 @@
 import React from "react";
 
-const Security = () => {
+const Entertainment = () => {
   const facilities = [
-    { name: "Bodyguards", label: "Bodyguards" },
-    { name: "ElectronicKeycard", label: "Electronic Keycard" },
-    { name: "EmergencyExitMap", label: "Emergency Exit Map" },
-    { name: "Safe", label: "Safe" },
-    { name: "Security", label: "Security" },
-    { name: "CCTV", label: "CCTV" },
-    { name: "FireExtinguishers", label: "Fire Extinguishers" },
-    { name: "SafetySecurity", label: "Safety and Security" },
-    { name: "SecurityAlarms", label: "Security Alarms" },
-    { name: "SmokeAlarms", label: "Smoke Alarms" },
+    { name: "Events", label: "Events" },
+    { name: "PUB", label: "PUB" },
+    { name: "PhotoSession", label: "Photo Session" },
+    { name: "Night Club", label: "Night Club" },
+    { name: "BeachClub", label: "Beach Club" },
+    { name: "Radio", label: "Radio" },
   ];
   return (
     <div className="facility">
@@ -37,4 +33,4 @@ const Security = () => {
   );
 };
 
-export default Security;
+export default Entertainment;

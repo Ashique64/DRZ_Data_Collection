@@ -23,6 +23,10 @@ import PaymentServices from "../Facilities/PaymentServices/PaymentServices";
 import MediaTechnology from "../Facilities/Media&Technology/Media&Technology";
 import IndoorActivites from "../Facilities/IndoorActivites/IndoorActivites";
 import FamilyKids from "../Facilities/Family&Kids/Family&Kids";
+import SaftyHygiene from "../Facilities/Safty&Hygiene/Safty&Hygiene";
+import PetEssentials from "../Facilities/PetEssentials/PetEssentials";
+import Entertainment from "../Facilities/Entertainment/Entertainment";
+import Shopping from "../Facilities/Shopping/Shopping";
 
 const PropertyFacilities = () => {
   const [activeTab, setActiveTab] = useState("BasicFacilities");
@@ -88,13 +92,13 @@ const PropertyFacilities = () => {
       case "Family&Kids":
         return <FamilyKids />;
       case "Safty&Hygiene":
-        return <CommonArea />;
+        return <SaftyHygiene />;
       case "PetEssentials":
-        return <CommonArea />;
+        return <PetEssentials />;
       case "Entertainment":
-        return <CommonArea />;
+        return <Entertainment />;
       case "Shopping":
-        return <CommonArea />;
+        return <Shopping />;
       default:
         return (
           <div className="tab-content-wrapper">

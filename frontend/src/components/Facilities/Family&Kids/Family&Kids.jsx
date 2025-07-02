@@ -2,16 +2,11 @@ import React from "react";
 
 const FamilyKids = () => {
   const facilities = [
-    { name: "Bodyguards", label: "Bodyguards" },
-    { name: "Electronic Keycard", label: "Electronic Keycard" },
-    { name: "EmergencyExitMap", label: "Emergency Exit Map" },
-    { name: "Safe", label: "Safe" },
-    { name: "Security", label: "Security" },
-    { name: "CCTV", label: "CCTV" },
-    { name: "FireExtinguishers", label: "Fire Extinguishers" },
-    { name: "SafetySecurity", label: "Safety and Security" },
-    { name: "SecurityAlarms", label: "Security Alarms" },
-    { name: "SmokeAlarms", label: "Smoke Alarms" },
+    { name: "ChildcareService", label: "Childcare Service" },
+    { name: "Play Area", label: "Children's Play Area" },
+    { name: "KidsClub", label: "Kid's Club" },
+    { name: "Strollers", label: "Strollers" },
+    { name: "Playground", label: "Playground" },
   ];
   return (
     <div className="facility">

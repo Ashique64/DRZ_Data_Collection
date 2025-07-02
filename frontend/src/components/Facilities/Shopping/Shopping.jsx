@@ -1,17 +1,12 @@
 import React from "react";
 
-const Security = () => {
+const Shopping = () => {
   const facilities = [
-    { name: "Bodyguards", label: "Bodyguards" },
-    { name: "ElectronicKeycard", label: "Electronic Keycard" },
-    { name: "EmergencyExitMap", label: "Emergency Exit Map" },
-    { name: "Safe", label: "Safe" },
-    { name: "Security", label: "Security" },
-    { name: "CCTV", label: "CCTV" },
-    { name: "FireExtinguishers", label: "Fire Extinguishers" },
-    { name: "SafetySecurity", label: "Safety and Security" },
-    { name: "SecurityAlarms", label: "Security Alarms" },
-    { name: "SmokeAlarms", label: "Smoke Alarms" },
+    { name: "BookShop", label: "Book Shop" },
+    { name: "Grocery", label: "Grocery" },
+    { name: "Shops", label: "Shops" },
+    { name: "SouvenirShop", label: "Souvenir Shop" },
+    { name: "Jewellery Shop", label: "Jewellery Shop" },
   ];
   return (
     <div className="facility">
@@ -37,4 +32,4 @@ const Security = () => {
   );
 };
 
-export default Security;
+export default Shopping;
