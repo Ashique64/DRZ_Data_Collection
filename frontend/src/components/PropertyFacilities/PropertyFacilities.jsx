@@ -4,6 +4,7 @@ import {
   LuChevronDown,
   LuChevronUp,
   LuImage,
+  LuInfo,
   LuLink,
   LuLoader,
 } from "react-icons/lu";
@@ -144,6 +145,26 @@ const PropertyFacilities = () => {
               <div className="tab-content">
                 <div className="tab-pane fade show active">
                   {renderTabContent(activeTab)}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="row first_row d-none d-lg-block">
+            <div className="col-md-12 item">
+              <div className="input_wrapper">
+                <label htmlFor="additional_info">
+                  If you want to provide additional information...
+                </label>
+                <div className="input_items">
+                  <span>
+                    <LuInfo />
+                  </span>
+                  <textarea
+                    name="additional_info"
+                    id="additional_info"
+                    // value={formData.additional_info}
+                    // onChange={handleInputChange}
+                  />
                 </div>
               </div>
             </div>
